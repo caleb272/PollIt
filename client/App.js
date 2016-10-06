@@ -8,7 +8,6 @@ import IntlWrapper from './modules/Intl/IntlWrapper';
 
 // Import Routes
 import routes from './routes';
-
 // Base stylesheet
 require('./main.css');
 
@@ -21,7 +20,7 @@ export default function App(props) {
         </Router>
       </IntlWrapper>
     </Provider>
-  );
+  )
 }
 
 App.propTypes = {
