@@ -1,0 +1,31 @@
+2016-10-08T15:43:23.509-0600 I CONTROL  [initandlisten] MongoDB starting : pid=49851 port=27018 dbpath=/Users/caleb/Documents/HiddenDesktop/PollIt/node_modules/mockgoose/.mongooseTempDB/27018 64-bit host=Calebs-MacBook-Pro.local
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten] db version v3.2.0
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten] git version: 45d947729a0315accb6d4f15a6b06be6d9c19fe7
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten] allocator: system
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten] modules: none
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten] build environment:
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten]     distarch: x86_64
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-10-08T15:43:23.510-0600 I CONTROL  [initandlisten] options: { net: { bindIp: "127.0.0.1", port: 27018 }, processManagement: { fork: true }, storage: { dbPath: "/Users/caleb/Documents/HiddenDesktop/PollIt/node_modules/mockgoose/.mongooseTempDB/27018", engine: "ephemeralForTest" }, systemLog: { destination: "file", path: "/Users/caleb/Documents/HiddenDesktop/PollIt/mongodb-prebuilt-1475963002747.log" } }
+2016-10-08T15:43:23.517-0600 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2016-10-08T15:43:23.517-0600 I CONTROL  [initandlisten] 
+2016-10-08T15:43:23.517-0600 I NETWORK  [HostnameCanonicalizationWorker] Starting hostname canonicalization worker
+2016-10-08T15:43:23.517-0600 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/Users/caleb/Documents/HiddenDesktop/PollIt/node_modules/mockgoose/.mongooseTempDB/27018/diagnostic.data'
+2016-10-08T15:43:23.518-0600 I NETWORK  [initandlisten] waiting for connections on port 27018
+2016-10-08T15:43:24.259-0600 I NETWORK  [initandlisten] connection accepted from 127.0.0.1:59826 #1 (1 connection now open)
+2016-10-08T15:43:25.388-0600 I NETWORK  [initandlisten] connection accepted from 127.0.0.1:59844 #2 (2 connections now open)
+2016-10-08T15:43:26.615-0600 I NETWORK  [initandlisten] connection accepted from 127.0.0.1:59862 #3 (3 connections now open)
+2016-10-08T15:43:27.550-0600 I NETWORK  [conn3] end connection 127.0.0.1:59862 (2 connections now open)
+2016-10-08T15:43:27.550-0600 I NETWORK  [conn1] end connection 127.0.0.1:59826 (2 connections now open)
+2016-10-08T15:43:27.550-0600 I NETWORK  [conn2] end connection 127.0.0.1:59844 (2 connections now open)
+2016-10-08T15:43:28.169-0600 I CONTROL  [signalProcessingThread] got signal 15 (Terminated: 15), will terminate after current cmd ends
+2016-10-08T15:43:28.169-0600 I FTDC     [signalProcessingThread] Shutting down full-time diagnostic data capture
+2016-10-08T15:43:28.171-0600 I CONTROL  [signalProcessingThread] now exiting
+2016-10-08T15:43:28.171-0600 I NETWORK  [signalProcessingThread] shutdown: going to close listening sockets...
+2016-10-08T15:43:28.171-0600 I NETWORK  [signalProcessingThread] closing listening socket: 6
+2016-10-08T15:43:28.171-0600 I NETWORK  [signalProcessingThread] closing listening socket: 7
+2016-10-08T15:43:28.171-0600 I NETWORK  [signalProcessingThread] removing socket file: /tmp/mongodb-27018.sock
+2016-10-08T15:43:28.171-0600 I NETWORK  [signalProcessingThread] shutdown: going to flush diaglog...
+2016-10-08T15:43:28.171-0600 I NETWORK  [signalProcessingThread] shutdown: going to close sockets...
+2016-10-08T15:43:28.171-0600 I STORAGE  [signalProcessingThread] shutdown: removing fs lock...
+2016-10-08T15:43:28.172-0600 I CONTROL  [signalProcessingThread] dbexit:  rc: 0

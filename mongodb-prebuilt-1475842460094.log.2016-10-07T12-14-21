@@ -1,0 +1,13 @@
+2016-10-07T06:14:20.807-0600 I CONTROL  [initandlisten] MongoDB starting : pid=45092 port=27020 dbpath=/Users/caleb/Documents/HiddenDesktop/PollIt/node_modules/mockgoose/.mongooseTempDB/27020 64-bit host=Calebs-MacBook-Pro.local
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten] db version v3.2.0
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten] git version: 45d947729a0315accb6d4f15a6b06be6d9c19fe7
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten] allocator: system
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten] modules: none
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten] build environment:
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten]     distarch: x86_64
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-10-07T06:14:20.808-0600 I CONTROL  [initandlisten] options: { net: { bindIp: "127.0.0.1", port: 27020 }, processManagement: { fork: true }, storage: { dbPath: "/Users/caleb/Documents/HiddenDesktop/PollIt/node_modules/mockgoose/.mongooseTempDB/27020", engine: "ephemeralForTest" }, systemLog: { destination: "file", path: "/Users/caleb/Documents/HiddenDesktop/PollIt/mongodb-prebuilt-1475842460094.log" } }
+2016-10-07T06:14:20.808-0600 E NETWORK  [initandlisten] listen(): bind() failed errno:48 Address already in use for socket: 127.0.0.1:27020
+2016-10-07T06:14:20.808-0600 E NETWORK  [initandlisten]   addr already in use
+2016-10-07T06:14:20.809-0600 E STORAGE  [initandlisten] Failed to set up sockets during startup.
+2016-10-07T06:14:20.809-0600 I CONTROL  [initandlisten] dbexit:  rc: 48

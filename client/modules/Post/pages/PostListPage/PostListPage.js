@@ -2,11 +2,12 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import Components
+import ClickCounter from '../../components/ClickCounter/ClickCounter'
 import PostList from '../../components/PostList';
 import PostCreateWidget from '../../components/PostCreateWidget/PostCreateWidget';
 
 // Import Actions
-import { addPostRequest, fetchPosts, deletePostRequest } from '../../PostActions';
+import { addPostRequest, fetchPosts, deletePostRequest, incrementCounterRequest } from '../../PostActions';
 import { toggleAddPost } from '../../../App/AppActions';
 
 // Import Selectors
@@ -14,6 +15,11 @@ import { getShowAddPost } from '../../../App/AppReducer';
 import { getPosts } from '../../PostReducer';
 
 class PostListPage extends Component {
+  constructor(props) {
+    super(props)
+    console.log('yoru props bitch', props)
+  }
+
   componentDidMount() {
     this.props.dispatch(fetchPosts());
   }
@@ -22,20 +28,28 @@ class PostListPage extends Component {
     if (confirm('Do you want to delete this post')) { // eslint-disable-line
       this.props.dispatch(deletePostRequest(post));
     }
-  };
+  }
 
   handleAddPost = (name, title, content) => {
     this.props.dispatch(toggleAddPost());
     this.props.dispatch(addPostRequest({ name, title, content }));
-  };
+  }
+
+
+  addClickCount() {
+    this.props.dispatch(addPostRequest({ name: 'hello', title: 'world', content: 'its me' }));
+    // this.props.dispatch(incrementCounterRequest(this.props.count))
+  }
+
 
   render() {
     return (
       <div>
+        <ClickCounter addClickCount={this.addClickCount.bind(this)} currentClickCount={this.props.posts.length} />
         <PostCreateWidget addPost={this.handleAddPost} showAddPost={this.props.showAddPost} />
         <PostList handleDeletePost={this.handleDeletePost} posts={this.props.posts} />
       </div>
-    );
+    )
   }
 }
 
