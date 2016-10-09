@@ -119,20 +119,35 @@ app.use((req, res, next) => {
       return next();
     }
 
+    function entry(name) {
+      function randomVotes() {
+        const votes = []
+        const end = Math.floor(Math.random() * 10) + 1
+
+        for (let i = 0; i < end; i++) {
+          votes.push(Math.floor(Math.random() * 999999999))
+        }
+        return votes
+      }
+
+      return {
+        name,
+        votes: randomVotes()
+      }
+    }
+
     function testChartData() {
       return [
         {
-          name: 'TEST',
-          entries: [],
-          votes: [],
+          name: 'Best Names',
+          entries: ['Caleb', 'Martin', 'Ethan', 'Blake'].map(entry),
           createdBy: 'Caleb Martin',
           dateCreated: Date.now(),
           id: 'aaa'
         },
         {
-          name: 'TEST',
-          entries: [],
-          votes: [],
+          name: 'Best Programming languages',
+          entries: ['C++', 'Javascript', 'Java', 'C#'].map(entry),
           createdBy: 'Clowns',
           dateCreated: Date.now(),
           id: 'baa'

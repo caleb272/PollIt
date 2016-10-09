@@ -16,12 +16,7 @@ class PollListPage extends Component {
 
 
   render() {
-    return (
-      <div>
-        YOA BOI: <button onClick={this.addPoll.bind(this)}>Add up</button>
-        <ChartList polls={this.props.polls} />
-      </div>
-    )
+    return <ChartList polls={this.props.polls} />
   }
 }
 
