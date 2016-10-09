@@ -119,7 +119,30 @@ app.use((req, res, next) => {
       return next();
     }
 
-    const store = configureStore();
+    function testChartData() {
+      return [
+        {
+          name: 'TEST',
+          entries: [],
+          votes: [],
+          createdBy: 'Caleb Martin',
+          dateCreated: Date.now(),
+          id: 'aaa'
+        },
+        {
+          name: 'TEST',
+          entries: [],
+          votes: [],
+          createdBy: 'Clowns',
+          dateCreated: Date.now(),
+          id: 'baa'
+        }
+      ]
+    }
+
+    const store = configureStore({
+      polls: testChartData()
+    });
 
     return fetchComponentData(store, renderProps.components, renderProps.params)
       .then(() => {
@@ -130,14 +153,27 @@ app.use((req, res, next) => {
             </IntlWrapper>
           </Provider>
         );
-        const finalState = store.getState();
-        finalState.count = 0
-        console.log('finalState:', finalState)
+
+        const finalState = store.getState()
 
         res
           .set('Content-Type', 'text/html')
           .status(200)
-          .end(renderFullPage(initialView, finalState));
+          .end(renderFullPage('', finalState));
+
+        /* warning js?8a56:36Warning: React attempted to reuse markup in a
+        container but the checksum was invalid. This generally means that
+        you are using server rendering and the markup generated on the server was
+        not what the client was expecting. React injected new markup to
+        compensate which works but you have lost many of the benefits of server
+        rendering. Instead, figure out why the markup being generated is different
+        on the client or server:
+        (client) <!-- react-empty: 1 -
+        (server) <div data-reactroot=""
+        // the line bellow is commented and replaced with the one above all these
+        // .end(renderFullPage(initialView, finalState));
+        comments due to this error
+        */
       })
       .catch((error) => next(error));
   });

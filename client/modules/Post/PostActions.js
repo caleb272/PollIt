@@ -4,7 +4,6 @@ import callApi from '../../util/apiCaller';
 export const ADD_POST = 'ADD_POST';
 export const ADD_POSTS = 'ADD_POSTS';
 export const DELETE_POST = 'DELETE_POST';
-export const INCREMENT_COUNT = 'INCREMENT_COUNT'
 
 // Export Actions
 export function addPost(post) {
@@ -12,13 +11,6 @@ export function addPost(post) {
     type: ADD_POST,
     post,
   };
-}
-
-export function incrementCount(count) {
-  return {
-    type: INCREMENT_COUNT,
-    count
-  }
 }
 
 export function addPostRequest(post) {
@@ -31,14 +23,6 @@ export function addPostRequest(post) {
       },
     }).then(res => dispatch(addPost(res.post)));
   };
-}
-
-export function incrementCounterRequest(count) {
-  return function dispatchedIncrementCounter(dispatch) {
-    return callApi('count', 'post', { count })
-      .then(response => dispatch(incrementCount(response.count || 0)))
-      .catch(err => console.error(err))
-  }
 }
 
 export function addPosts(posts) {

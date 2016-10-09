@@ -1,4 +1,4 @@
-import { ADD_POST, ADD_POSTS, DELETE_POST, INCREMENT_COUNT } from './PostActions';
+import { ADD_POST, ADD_POSTS, DELETE_POST } from './PostActions';
 
 // Initial State
 const initialState = { data: [] };
@@ -19,13 +19,6 @@ const PostReducer = (state = initialState, action) => {
       return {
         data: state.data.filter(post => post.cuid !== action.cuid),
       };
-
-    case INCREMENT_COUNT :
-      console.log('your count:', action.count)
-      return {
-        data: state.data,
-        count: action.count
-      }
 
     default:
       return state;

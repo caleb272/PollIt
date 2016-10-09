@@ -15,11 +15,6 @@ import { getShowAddPost } from '../../../App/AppReducer';
 import { getPosts } from '../../PostReducer';
 
 class PostListPage extends Component {
-  constructor(props) {
-    super(props)
-    console.log('yoru props bitch', props)
-  }
-
   componentDidMount() {
     this.props.dispatch(fetchPosts());
   }

@@ -16,7 +16,9 @@ export default function App(props) {
     <Provider store={props.store}>
       <IntlWrapper>
         <Router history={browserHistory}>
-          {routes}
+          <div>
+            {routes}
+          </div>
         </Router>
       </IntlWrapper>
     </Provider>

@@ -7,7 +7,6 @@ import DevTools from './modules/App/components/DevTools';
 import rootReducer from './reducers';
 
 export function configureStore(initialState = {}) {
-  console.log('configuring the store with state:', initialState)
   // Middleware and store enhancers
   const enhancers = [
     applyMiddleware(thunk),
