@@ -1,6 +1,9 @@
 import React, { PropTypes, Component } from 'react'
 import * as d3 from 'd3'
 import ReactFauxDOM from 'react-faux-dom'
+import { connect } from 'react-redux'
+
+import { updatePollRequest } from '../../PollActions'
 
 class BarChart extends Component {
   constructor(props) {
@@ -100,6 +103,8 @@ class BarChart extends Component {
         // return d3.easeCubicInOut(frame)
         return d3.easeExpOut(frame)
       }
+
+      that.props.dispatch(updatePollRequest(that.props.pollData))
     }
 
     this.updateChartState(fauxDOM)
@@ -132,4 +137,5 @@ BarChart.propTypes = {
   })
 }
 
-export default BarChart
+// export default BarChart
+export default connect()(BarChart)

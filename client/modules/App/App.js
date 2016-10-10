@@ -14,6 +14,8 @@ import Footer from './components/Footer/Footer';
 import { toggleAddPost } from './AppActions';
 import { switchLanguage } from '../../modules/Intl/IntlActions';
 
+const enableDevTools = false
+
 export class App extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +33,7 @@ export class App extends Component {
   render() {
     return (
       <div>
-        {this.state.isMounted && !window.devToolsExtension && process.env.NODE_ENV === 'development' && <DevTools />}
+         {this.state.isMounted && !window.devToolsExtension && process.env.NODE_ENV === 'development' && <DevTools /> && enableDevTools}
         <div>
           <Helmet
             title="MERN Starter - Blog App"
