@@ -1,12 +1,13 @@
 import React, { PropTypes, Component } from 'react'
 import * as d3 from 'd3'
+import ReactFauxDOM from 'react-faux-dom'
 
 class BarChart extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      chart: document.createElement('div')
+      chart: null
     }
   }
 
@@ -15,10 +16,10 @@ class BarChart extends Component {
     this.buildChart(this.props.pollData)
   }
 
-  buildChart({ entries, id }) {
-    // const chart = d3.select(`#${id}`)
-    const chartHTML = document.createElement('div')
-    const chart = d3.select(chartHTML).append('svg')
+
+  buildChart({ entries }) {
+    const that = this
+    const fauxDOM = ReactFauxDOM.createElement('div')
     const padding = { left: 30, top: 10, right: 10, bottom: 20 }
     const chartWidth = (600 - (padding.left + padding.right))
     const chartHeight = (400 - (padding.top + padding.bottom))
@@ -35,64 +36,91 @@ class BarChart extends Component {
     const xAxis = d3.axisBottom(xScale)
     const yAxis = d3.axisLeft(yScale)
 
-    chart
+    const chart = d3.select(fauxDOM).append('svg')
         .attr('width', (chartWidth + padding.left + padding.right))
         .attr('height', (chartHeight + padding.top + padding.bottom))
         .style('background-color', 'lightblue')
-    const innerChart = chart.append('g')
+      .append('g')
+        .classed('inner-chart', true)
         .attr('transform', `translate(${padding.left}, ${padding.top})`)
         .attr('width', chartWidth)
         .attr('height', chartHeight)
 
-    this.setState({ chart: chartHTML })
-
-    innerChart.selectAll('rect')
+    const bars = chart.selectAll('rect')
         .data(entries).enter()
       .append('rect')
         .attr('fill', 'orange')
         .attr('width', xScale.bandwidth())
-        .attr('height', (entry) => chartHeight - yScale(entry.votes.length))
+        .attr('height', getBarHeight)
         .attr('x', entry => xScale(entry.name))
-        .attr('y', entry => (yScale(entry.votes.length)))
-        .on('click', bar => console.log(bar))
+        .attr('y', entry => yScale(entry.votes.length))
+        .on('click', onBarClicked)
 
-    innerChart.append('g')
-        .classed('.x.axis', true)
+    chart.append('g')
+        .classed('x axis', true)
         .attr('transform', `translate(0, ${chartHeight})`)
         .call(xAxis)
 
-    innerChart.append('g')
-        .classed('.y.axis', true)
+    const yAxisElement = chart.append('g')
+        .classed('y axis', true)
         .attr('transform', 'translate(0, 0)')
         .call(yAxis)
 
+    function getBarHeight(entry) {
+      return chartHeight - yScale(entry.votes.length)
+    }
+
+
     function onBarClicked(bar) {
-      console.log('clicked')
-      const duration = 750
+      const transitionDuration = 500
       bar.votes.push(Math.floor(Math.random() * 9999999999))
+
       xScale.domain(entries.map(entry => entry.name))
       yScale.domain([0, d3.max(entries, entry => entry.votes.length)])
 
-      innerChart.select('.x.axis')
-          .call(xAxis)
-      innerChart.select('.y.axis')
+      bars
+          .transition()
+          .duration(transitionDuration)
+          .attr('height', (entry) => chartHeight - yScale(entry.votes.length))
+          .attr('y', entry => (yScale(entry.votes.length)))
+          .ease((frame) => {
+            that.updateChartState(fauxDOM)
+            return ease(frame)
+          })
+
+      yAxisElement
+          .transition()
+          .duration(transitionDuration)
+          .ease(ease)
           .call(yAxis)
+
+      function ease(frame) {
+        /* make these in the options when setting up the chart */
+        // return d3.easeBounceInOut(frame)
+        // return d3.easeCubicInOut(frame)
+        return d3.easeExpOut(frame)
+      }
     }
 
-    this.setState({ chart: chartHTML })
+    this.updateChartState(fauxDOM)
   }
 
 
-  // <svg id={this.props.pollData.id}>{this.state.updates}</svg>
+  updateChartState(fauxDOM) {
+    this.setState({ chart: fauxDOM.toReact() })
+  }
+
+
   render() {
     return (
       <div> <center>
         <h3>{this.props.pollData.name}</h3>
-        <div dangerouslySetInnerHTML={{ __html: (this.state.chart.innerHTML) }}></div>
+        {this.state.chart}
       </center> </div>
     )
   }
 }
+
 
 BarChart.propTypes = {
   pollData: PropTypes.shape({
