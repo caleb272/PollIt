@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
+import dotenv from 'dotenv'
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -13,7 +14,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 // Initialize the Express App
 const app = new Express();
-
+dotenv.config()
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(config);
@@ -34,8 +35,40 @@ import routes from '../client/routes'
 import { fetchComponentData } from './util/fetchData'
 import posts from './routes/post.routes'
 import polls from './routes/poll.routes'
+import auth from './routes/auth.routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
+
+
+/* TEMP PASSPORT SETUP */
+import passport from 'passport'
+import session from 'express-session'
+import GitHubStrategy from 'passport-github2'
+
+
+passport.serializeUser((user, done) => {
+  done(null, '123')
+})
+
+
+passport.deserializeUser((id, done) => {
+  // load the user from the DB here
+  done(null, { name: 'Caleb' })
+})
+
+
+passport.use(new GitHubStrategy(
+  {
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET_ID,
+    callbackURL: 'http://192.168.1.8:8000/api/auth/github/callback/'
+  },
+  function verifyCallback(accessToken, refreshToken, profile, done) {
+    // get the user from the database here
+    console.log('your shit:', profile)
+    return done(null, { name: 'Caleb' })
+  }
+))
 
 /* TEST STUFF DELETE WHEN DONE */
 import TestPollSchema from './models/poll'
@@ -59,8 +92,24 @@ app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
+
+// passport STUFF
+app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET }))
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use('/api', posts)
 app.use('/api', polls)
+
+app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
+app.get('/api/auth/github/callback',
+    passport.authenticate('github', { failureRedirect: '/' }),
+    (req, res) => {
+      console.log('successful')
+      res.redirect('/')
+    }
+  )
+
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
@@ -145,7 +194,7 @@ app.use((req, res, next) => {
           title: 'Best Programming languages',
           author: 'Clowns',
           entries: ['C++', 'Javascript', 'Java', 'C#'].map(entry),
-          cuid: 'fuck',
+          cuid: require('cuid').slug(), // eslint-disable-line
           dateCreated: Date.now()
         },
         {
