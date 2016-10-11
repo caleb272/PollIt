@@ -29,7 +29,7 @@ class BarChart extends Component {
 
     const xScale = d3.scaleBand()
         .rangeRound([0, chartWidth])
-        .domain(entries.map(entry => entry.name))
+        .domain(entries.map(entry => entry.title))
         .paddingOuter(0.05)
         .padding(0.05)
     const yScale = d3.scaleLinear()
@@ -55,9 +55,13 @@ class BarChart extends Component {
         .attr('fill', 'orange')
         .attr('width', xScale.bandwidth())
         .attr('height', getBarHeight)
-        .attr('x', entry => xScale(entry.name))
+        .attr('x', entry => xScale(entry.title))
         .attr('y', entry => yScale(entry.votes.length))
-        .on('click', onBarClicked)
+        .on('click', (bar) => {
+          // this.props.dispatch(updatePollRequest(this.props.pollData.title, 0, bar.title))
+          this.props.dispatch(updatePollRequest(this.props.pollData.cuid, 0, bar.title))
+            .then(updatedPoll => onBarClicked(bar))
+        })
 
     chart.append('g')
         .classed('x axis', true)
@@ -78,7 +82,7 @@ class BarChart extends Component {
       const transitionDuration = 500
       bar.votes.push(Math.floor(Math.random() * 9999999999))
 
-      xScale.domain(entries.map(entry => entry.name))
+      xScale.domain(entries.map(entry => entry.title))
       yScale.domain([0, d3.max(entries, entry => entry.votes.length)])
 
       bars
@@ -103,8 +107,6 @@ class BarChart extends Component {
         // return d3.easeCubicInOut(frame)
         return d3.easeExpOut(frame)
       }
-
-      that.props.dispatch(updatePollRequest(that.props.pollData))
     }
 
     this.updateChartState(fauxDOM)
@@ -119,7 +121,7 @@ class BarChart extends Component {
   render() {
     return (
       <div> <center>
-        <h3>{this.props.pollData.name}</h3>
+        <h3>{this.props.pollData.title}</h3>
         {this.state.chart}
       </center> </div>
     )
@@ -129,11 +131,11 @@ class BarChart extends Component {
 
 BarChart.propTypes = {
   pollData: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
     entries: PropTypes.array.isRequired,
-    createdBy: PropTypes.string.isRequired,
-    dateCreated: PropTypes.number.isRequired,
-    id: PropTypes.string.isRequired
+    cuid: PropTypes.string.isRequired,
+    dateCreated: PropTypes.number.isRequired
   })
 }
 

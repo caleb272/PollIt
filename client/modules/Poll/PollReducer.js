@@ -8,8 +8,9 @@ function PollReducer(state = initialState, action) {
       return [...state, action.poll]
 
     case UPDATE_POLL:
-      console.log('update poll called with action:', action)
-      return [...state]
+      console.log('before:', action)
+      // console.log('after:', state.map(currentPoll => currentPoll.id === action.poll.id ? action.poll : currentPoll))
+      return state.map(currentPoll => currentPoll.cuid === action.poll.cuid ? action.poll : currentPoll)
 
     default:
       return state
@@ -20,8 +21,8 @@ export function getPolls(state) {
   return state.polls
 }
 
-export function getPoll(state, id) {
-  return state.polls.data.filter(poll => poll.id === id)
+export function getPoll(state, cuid) {
+  return state.polls.data.filter(poll => poll.cuid === cuid)
 }
 
 export default PollReducer

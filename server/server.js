@@ -37,6 +37,9 @@ import polls from './routes/poll.routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
 
+/* TEST STUFF DELETE WHEN DONE */
+import TestPollSchema from './models/poll'
+
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;
 
@@ -119,7 +122,7 @@ app.use((req, res, next) => {
       return next();
     }
 
-    function entry(name) {
+    function entry(title) {
       function randomVotes() {
         const votes = []
         const end = Math.floor(Math.random() * 10) + 1
@@ -131,28 +134,36 @@ app.use((req, res, next) => {
       }
 
       return {
-        name,
+        title,
         votes: randomVotes()
       }
     }
 
     function testChartData() {
-      return [
+      const testData = [
         {
-          name: 'Best Names',
-          entries: ['Caleb', 'Martin', 'Ethan', 'Blake'].map(entry),
-          createdBy: 'Caleb Martin',
-          dateCreated: Date.now(),
-          id: 'aaa'
+          title: 'Best Programming languages',
+          author: 'Clowns',
+          entries: ['C++', 'Javascript', 'Java', 'C#'].map(entry),
+          cuid: 'fuck',
+          dateCreated: Date.now()
         },
         {
-          name: 'Best Programming languages',
-          entries: ['C++', 'Javascript', 'Java', 'C#'].map(entry),
-          createdBy: 'Clowns',
-          dateCreated: Date.now(),
-          id: 'baa'
+          title: 'Best Names',
+          author: 'Caleb Martin',
+          entries: ['Caleb', 'Martin', 'Ethan', 'Blake'].map(entry),
+          cuid: require('cuid').slug(), // eslint-disable-line
+          dateCreated: Date.now()
         }
       ]
+
+      // testData.forEach(current => {
+      //   const x = new TestPollSchema(current)
+      //   x.cuid = 'fuck'
+      //   x.save()
+      // })
+      testData.forEach(current => new TestPollSchema(current).save())
+      return testData
     }
 
     const store = configureStore({

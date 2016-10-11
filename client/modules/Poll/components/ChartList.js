@@ -4,18 +4,18 @@ import BarChart from './BarChart/BarChart'
 function ChartList(props) {
   return (
     <div>
-      {props.polls.map((poll) => (<BarChart pollData={poll} key={poll.id} />))}
+      {props.polls.map((poll) => (<BarChart pollData={poll} key={poll.cuid} />))}
     </div>
   )
 }
 
 ChartList.propTypes = {
   polls: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
     entries: PropTypes.array.isRequired,
-    createdBy: PropTypes.string.isRequired,
     dateCreated: PropTypes.number.isRequired,
-    id: PropTypes.string.isRequired
+    cuid: PropTypes.string.isRequired
   }))
 }
 
