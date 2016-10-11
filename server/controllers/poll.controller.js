@@ -7,6 +7,9 @@ export function addPoll(req, res) {
 }
 
 export function updatePoll(req, res) {
+  console.log('your is authenticated:', req.isAuthenticated())
+  console.log('loadded user profile:', req.user)
+
   Poll.findOne({ cuid: req.body.pollID })
     .then(found => console.log('found with pollID :', found))
     .catch(err => console.log(err))

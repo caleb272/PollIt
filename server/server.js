@@ -35,7 +35,6 @@ import routes from '../client/routes'
 import { fetchComponentData } from './util/fetchData'
 import posts from './routes/post.routes'
 import polls from './routes/poll.routes'
-import auth from './routes/auth.routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
 
@@ -43,17 +42,25 @@ import serverConfig from './config'
 /* TEMP PASSPORT SETUP */
 import passport from 'passport'
 import session from 'express-session'
+import connectMongo from 'connect-mongo'
 import GitHubStrategy from 'passport-github2'
 
+/* USER DATABASE TEMP */
+import User from './models/user'
+
+const MongoStore = connectMongo(session)
 
 passport.serializeUser((user, done) => {
-  done(null, '123')
+  console.log('serializeUser called with use id:', user.id)
+  done(null, user.id)
 })
 
 
 passport.deserializeUser((id, done) => {
   // load the user from the DB here
-  done(null, { name: 'Caleb' })
+  // console.log('deSerializeUser called with id:', id)
+  console.log('your id for deseroeisaot:', id)
+  done(null, { name: 'caleb', id })
 })
 
 
@@ -65,8 +72,7 @@ passport.use(new GitHubStrategy(
   },
   function verifyCallback(accessToken, refreshToken, profile, done) {
     // get the user from the database here
-    console.log('your shit:', profile)
-    return done(null, { name: 'Caleb' })
+    return done(null, { name: 'caleb', id: profile.id })
   }
 ))
 
@@ -87,29 +93,36 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
   dummyData();
 });
 
+
+const sessionSettings = {
+  secret: process.env.EXPRESS_SESSION_SECRET,
+  resave: true,
+  saveUnititialized: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
+}
+
 // Apply body Parser and server public assets and routes
 app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
-app.use(Express.static(path.resolve(__dirname, '../dist')));
 
 // passport STUFF
-app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET }))
+app.use(session(sessionSettings))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(Express.static(path.resolve(__dirname, '../dist')));
 
-app.use('/api', posts)
-app.use('/api', polls)
 
-app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
-app.get('/api/auth/github/callback',
-    passport.authenticate('github', { failureRedirect: '/' }),
+app.get('/api/auth/github/', passport.authenticate('github', { scope: ['user:email'] }))
+app.get('/api/auth/github/callback/',
+    passport.authenticate('github', { failureRedirect: '/failed' }),
     (req, res) => {
-      console.log('successful')
       res.redirect('/')
     }
   )
 
+  app.use('/api', posts)
+  app.use('/api', polls)
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
