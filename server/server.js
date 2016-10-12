@@ -43,24 +43,19 @@ import serverConfig from './config'
 import passport from 'passport'
 import session from 'express-session'
 import connectMongo from 'connect-mongo'
-import GitHubStrategy from 'passport-github2'
-
-/* USER DATABASE TEMP */
-import User from './models/user'
+import { Strategy as GitHubStrategy } from 'passport-github2'
 
 const MongoStore = connectMongo(session)
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser called with use id:', user.id)
-  done(null, user.id)
+  console.log('serializeUser')
+  done(null, user)
 })
 
 
-passport.deserializeUser((id, done) => {
-  // load the user from the DB here
-  // console.log('deSerializeUser called with id:', id)
-  console.log('your id for deseroeisaot:', id)
-  done(null, { name: 'caleb', id })
+passport.deserializeUser((obj, done) => {
+  console.log('deserializeUser')
+  done(null, obj)
 })
 
 
@@ -68,16 +63,12 @@ passport.use(new GitHubStrategy(
   {
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET_ID,
-    callbackURL: 'http://192.168.1.8:8000/api/auth/github/callback/'
+    callbackURL: 'http://192.168.1.8:8000/api/auth/github/callback'
   },
-  function verifyCallback(accessToken, refreshToken, profile, done) {
-    // get the user from the database here
-    return done(null, { name: 'caleb', id: profile.id })
+  (accessToken, refreshToken, profile, done) => {
+    return done(null, profile)
   }
 ))
-
-/* TEST STUFF DELETE WHEN DONE */
-import TestPollSchema from './models/poll'
 
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;
@@ -96,33 +87,54 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
 
 const sessionSettings = {
   secret: process.env.EXPRESS_SESSION_SECRET,
-  resave: true,
-  saveUnititialized: true,
+  resave: false,
+  saveUnititialized: false,
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }
 
+
 // Apply body Parser and server public assets and routes
+app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
-
 // passport STUFF
 app.use(session(sessionSettings))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(Express.static(path.resolve(__dirname, '../dist')));
 
 
-app.get('/api/auth/github/', passport.authenticate('github', { scope: ['user:email'] }))
-app.get('/api/auth/github/callback/',
+app.get('/user', (req, res) => {
+  res.send({
+    authenticated: req.isAuthenticated(),
+    user: req.user
+  })
+})
+
+/* i making user that the passport user object wasnt working on put protocols */
+// app.put('/api/polls', (req, res) => {
+//   console.log('api called')
+//   console.log({
+//     authenticated: req.isAuthenticated(),
+//     user: req.user
+//   })
+//
+//   res.send({
+//     authenticated: req.isAuthenticated(),
+//     user: req.user
+//   })
+// })
+
+app.use('/api', posts)
+app.use('/api', polls)
+
+app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
+app.get('/api/auth/github/callback',
     passport.authenticate('github', { failureRedirect: '/failed' }),
     (req, res) => {
       res.redirect('/')
     }
   )
-
-  app.use('/api', posts)
-  app.use('/api', polls)
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
@@ -219,11 +231,7 @@ app.use((req, res, next) => {
         }
       ]
 
-      // testData.forEach(current => {
-      //   const x = new TestPollSchema(current)
-      //   x.cuid = 'fuck'
-      //   x.save()
-      // })
+      const TestPollSchema = require('./models/poll').default
       testData.forEach(current => new TestPollSchema(current).save())
       return testData
     }
