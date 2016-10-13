@@ -33,6 +33,14 @@ export default (
       }}
     />
     <Route
+      path="/polls/:cuid"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Poll/pages/PollDetailPage/PollDetailPage').default)
+        })
+      }}
+    />
+    <Route
       path="/posts/:slug-:cuid"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {

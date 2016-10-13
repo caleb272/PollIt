@@ -119,12 +119,7 @@ class BarChart extends Component {
 
 
   render() {
-    return (
-      <div> <center>
-        <h3>{this.props.pollData.title}</h3>
-        {this.state.chart}
-      </center> </div>
-    )
+    return <div>{this.state.chart}</div>
   }
 }
 

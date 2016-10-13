@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react'
-import BarChart from './BarChart/BarChart'
+import PollListItem from './PollListItem/PollListItem'
 
-function ChartList(props) {
+function PollList(props) {
   return (
     <div>
-      {props.polls.map((poll) => (<BarChart pollData={poll} key={poll.cuid} />))}
+      {props.polls.map((poll) => (<PollListItem poll={poll} key={poll.cuid} />))}
     </div>
   )
 }
 
-ChartList.propTypes = {
+PollList.propTypes = {
   polls: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
@@ -19,4 +19,4 @@ ChartList.propTypes = {
   }))
 }
 
-export default ChartList
+export default PollList

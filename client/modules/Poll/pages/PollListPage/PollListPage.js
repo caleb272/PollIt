@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { getPolls } from '../../PollReducer'
 
-import ChartList from '../../components/ChartList'
+import ChartList from '../../components/PollList'
 
 class PollListPage extends Component {
   addPoll() {

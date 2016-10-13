@@ -44,6 +44,7 @@ import passport from 'passport'
 import session from 'express-session'
 import connectMongo from 'connect-mongo'
 import { Strategy as GitHubStrategy } from 'passport-github2'
+import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth'
 
 const MongoStore = connectMongo(session)
 
@@ -66,6 +67,19 @@ passport.use(new GitHubStrategy(
     callbackURL: 'http://192.168.1.8:8000/api/auth/github/callback'
   },
   (accessToken, refreshToken, profile, done) => {
+    return done(null, profile)
+  }
+))
+
+
+passport.use(new GoogleStrategy(
+  {
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
+  },
+  (accessToken, refreshToken, profile, done) => {
+    console.log('loaded profile:', profile)
     return done(null, profile)
   }
 ))
