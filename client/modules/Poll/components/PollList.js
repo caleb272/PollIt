@@ -4,7 +4,12 @@ import PollListItem from './PollListItem/PollListItem'
 function PollList(props) {
   return (
     <div>
-      {props.polls.map((poll) => (<PollListItem poll={poll} key={poll.cuid} />))}
+      {props.polls.map((poll) => (
+        <PollListItem
+          poll={poll}
+          key={poll.cuid}
+        />
+      ))}
     </div>
   )
 }

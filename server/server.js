@@ -233,14 +233,16 @@ app.use((req, res, next) => {
           title: 'Best Programming languages',
           author: 'Clowns',
           entries: ['C++', 'Javascript', 'Java', 'C#'].map(entry),
-          cuid: require('cuid').slug(), // eslint-disable-line
+          // cuid: require('cuid').slug(), // eslint-disable-line
+          cuid: '123456',
           dateCreated: Date.now()
         },
         {
           title: 'Best Names',
           author: 'Caleb Martin',
           entries: ['Caleb', 'Martin', 'Ethan', 'Blake'].map(entry),
-          cuid: require('cuid').slug(), // eslint-disable-line
+          // cuid: require('cuid').slug(), // eslint-disable-line
+          cuid: '123457',
           dateCreated: Date.now()
         }
       ]

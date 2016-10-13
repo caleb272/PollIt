@@ -1,15 +1,35 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { getPoll } from '../../PollReducer'
+import BarChart from '../../components/BarChart/BarChart'
 
-function PollDetailPage() {
+function PollDetailPage(props) {
   return (
     <div>
-      <h1>Poll Detail Page</h1>
+      <center>
+        <h3>{props.poll.title}</h3>
+        <BarChart
+          pollData={props.poll}
+        />
+      </center>
     </div>
   )
 }
 
 PollDetailPage.propTypes = {
-
+  poll: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    entries: PropTypes.array.isRequired,
+    dateCreated: PropTypes.number.isRequired,
+    cuid: PropTypes.string.isRequired
+  })
 }
 
-export default PollDetailPage
+function mapStateToProps(state, props) {
+  return {
+    poll: getPoll(state, props.params.cuid)
+  }
+}
+
+export default connect(mapStateToProps)(PollDetailPage)

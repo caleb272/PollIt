@@ -22,7 +22,7 @@ export function getPolls(state) {
 }
 
 export function getPoll(state, cuid) {
-  return state.polls.data.filter(poll => poll.cuid === cuid)
+  return state.polls.filter(poll => poll.cuid === cuid)[0]
 }
 
 export default PollReducer
