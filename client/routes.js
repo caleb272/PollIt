@@ -17,8 +17,9 @@ if (typeof require.ensure !== 'function') {
 if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
   require('./modules/Post/pages/PostListPage/PostListPage');
-  require('./modules/Post/pages/PostDetailPage/PostDetailPage');
-  require('./modules/Poll/pages/PollListPage/PollListPage');
+  require('./modules/Post/pages/PostDetailPage/PostDetailPage')
+  require('./modules/Poll/pages/PollListPage/PollListPage')
+  require('./modules/Poll/pages/404/404')
 }
 
 // react-router setup with code-splitting
@@ -28,7 +29,7 @@ export default (
     <IndexRoute
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Poll/pages/PollListPage/PollListPage').default);
+          cb(null, require('./modules/Poll/pages/PollListPage/PollListPage').default)
         });
       }}
     />
@@ -44,8 +45,16 @@ export default (
       path="/posts/:slug-:cuid"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Post/pages/PostDetailPage/PostDetailPage').default);
+          cb(null, require('./modules/Post/pages/PostDetailPage/PostDetailPage').default)
         });
+      }}
+    />
+    <Route
+      path="*"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Poll/pages/404/404').default)
+        })
       }}
     />
   </Route>

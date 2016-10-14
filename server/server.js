@@ -35,31 +35,30 @@ import Helmet from 'react-helmet';
 // Import required modules
 import routes from '../client/routes'
 import { fetchComponentData } from './util/fetchData'
-import posts from './routes/post.routes'
-import polls from './routes/poll.routes'
+import api from './routes/api/api.routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
 
 
 /* TEMP PASSPORT SETUP */
+import UserModel from './models/user'
 import passport from 'passport'
 import session from 'express-session'
 import connectMongo from 'connect-mongo'
-// import { Strategy as GitHubStrategy } from 'passport-github2'
-const GitHubStrategy = require('passport-github2').Strategy
+import { Strategy as GitHubStrategy } from 'passport-github2'
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth'
 
 const MongoStore = connectMongo(session)
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser')
-  done(null, user)
+  done(null, user._id)
 })
 
 
-passport.deserializeUser((obj, done) => {
-  console.log('deserializeUser')
-  done(null, obj)
+passport.deserializeUser((id, done) => {
+  UserModel.findOne({ _id: id }, (err, user) => {
+    done(err, user)
+  })
 })
 
 
@@ -71,7 +70,19 @@ passport.use(new GitHubStrategy(
   },
   (accessToken, refreshToken, profile, done) => {
     process.nextTick(() => {
-      return done(null, profile)
+      console.log('profile.id', profile.id)
+      UserModel.findOne({ github_id: profile.id }, (err, user) => {
+        if (!user) {
+          new UserModel({
+            username: profile.displayName,
+            github_id: profile.id
+          }).save((er, newUser) => {
+            return done(er, newUser)
+          })
+        } else {
+          return done(err, profile)
+        }
+      })
     })
   }
 ))
@@ -114,7 +125,7 @@ const sessionSettings = {
 
 // Apply body Parser and server public assets and routes
 app.use(Express.static(path.resolve(__dirname, '../dist')));
-// app.use(compression());
+app.use(compression())
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 app.use(bodyParser.json())
@@ -157,9 +168,7 @@ app.put('/user', (req, res) => {
 //     user: req.user
 //   })
 // })
-
-app.use('/api', posts)
-app.use('/api', polls)
+app.use('/api', api)
 
 // app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
 app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
