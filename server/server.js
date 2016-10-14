@@ -1,7 +1,9 @@
 import Express from 'express';
 import compression from 'compression';
+import cookieParser from 'cookie-parser'
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import methodOverride from 'method-override'
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
 import dotenv from 'dotenv'
@@ -43,7 +45,8 @@ import serverConfig from './config'
 import passport from 'passport'
 import session from 'express-session'
 import connectMongo from 'connect-mongo'
-import { Strategy as GitHubStrategy } from 'passport-github2'
+// import { Strategy as GitHubStrategy } from 'passport-github2'
+const GitHubStrategy = require('passport-github2').Strategy
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth'
 
 const MongoStore = connectMongo(session)
@@ -67,7 +70,9 @@ passport.use(new GitHubStrategy(
     callbackURL: 'http://192.168.1.8:8000/api/auth/github/callback'
   },
   (accessToken, refreshToken, profile, done) => {
-    return done(null, profile)
+    process.nextTick(() => {
+      return done(null, profile)
+    })
   }
 ))
 
@@ -109,9 +114,11 @@ const sessionSettings = {
 
 // Apply body Parser and server public assets and routes
 app.use(Express.static(path.resolve(__dirname, '../dist')));
-app.use(compression());
-app.use(bodyParser.json({ limit: '20mb' }));
-app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
+// app.use(compression());
+app.use(cookieParser())
+app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
+app.use(bodyParser.json())
+app.use(methodOverride())
 // passport STUFF
 app.use(session(sessionSettings))
 app.use(passport.initialize())
@@ -119,6 +126,18 @@ app.use(passport.session())
 
 
 app.get('/user', (req, res) => {
+  res.send({
+    authenticated: req.isAuthenticated(),
+    user: req.user
+  })
+})
+
+app.put('/user', (req, res) => {
+  console.log({
+    authenticated: req.isAuthenticated(),
+    user: req.user
+  })
+  console.log('called the put user')
   res.send({
     authenticated: req.isAuthenticated(),
     user: req.user
@@ -142,6 +161,7 @@ app.get('/user', (req, res) => {
 app.use('/api', posts)
 app.use('/api', polls)
 
+// app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
 app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
 app.get('/api/auth/github/callback',
     passport.authenticate('github', { failureRedirect: '/failed' }),
@@ -149,6 +169,14 @@ app.get('/api/auth/github/callback',
       res.redirect('/')
     }
   )
+
+app.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+app.get('/api/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/failed' }),
+    (req, res) => {
+      console.log('google auth callback called')
+      res.redirect('/')
+    })
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {

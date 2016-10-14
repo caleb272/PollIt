@@ -5,7 +5,7 @@ export const UPDATE_POLL = 'UPDATE_POLL'
 export function updatePollRequest(pollID, voterID, entryTitle) {
   console.log('pollID:', pollID)
   return function dispatchedRequest(dispatch) {
-    return callApi('polls', 'put', { pollID, voterID, entryTitle })
+    return callApi('/polls', 'PUT', { pollID, voterID, entryTitle })
       .then(response => dispatch(updatePoll(response.updatedPoll)))
       .catch(err => console.error(err))
   }
