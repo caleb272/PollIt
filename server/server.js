@@ -70,17 +70,14 @@ passport.use(new GitHubStrategy(
   },
   (accessToken, refreshToken, profile, done) => {
     process.nextTick(() => {
-      console.log('profile.id', profile.id)
       UserModel.findOne({ github_id: profile.id }, (err, user) => {
         if (!user) {
           new UserModel({
             username: profile.displayName,
             github_id: profile.id
-          }).save((er, newUser) => {
-            return done(er, newUser)
-          })
+          }).save(done)
         } else {
-          return done(err, profile)
+          done(err, profile)
         }
       })
     })
