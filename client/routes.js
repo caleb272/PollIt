@@ -50,6 +50,14 @@ export default (
       }}
     />
     <Route
+      path="/create"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Poll/pages/CreatePollPage/CreatePollPage'))
+        })
+      }}
+    />
+    <Route
       path="*"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {

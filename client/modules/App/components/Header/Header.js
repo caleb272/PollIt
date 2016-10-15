@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
+import LoginButton from '../LoginButton/LoginButton'
+
 // Import Style
 import styles from './Header.css';
 
@@ -24,7 +26,7 @@ export function Header(props, context) {
         </h1>
         {
           context.router.isActive('/', true)
-            ? <a className={styles['add-post-button']} href="#" onClick={props.toggleAddPost}><FormattedMessage id="addPost" /></a>
+            ? <LoginButton />
             : null
         }
       </div>
@@ -37,7 +39,6 @@ Header.contextTypes = {
 };
 
 Header.propTypes = {
-  toggleAddPost: PropTypes.func.isRequired,
   switchLanguage: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };

@@ -9,8 +9,7 @@ function PollReducer(state = initialState, action) {
 
     case UPDATE_POLL:
       console.log('before:', action)
-      // console.log('after:', state.map(currentPoll => currentPoll.id === action.poll.id ? action.poll : currentPoll))
-      return state.map(currentPoll => currentPoll.cuid === action.poll.cuid ? action.poll : currentPoll)
+      return state.map(currentPoll => (currentPoll.cuid === action.poll.cuid ? action.poll : currentPoll))
 
     default:
       return state
