@@ -6,17 +6,14 @@ import bodyParser from 'body-parser';
 import methodOverride from 'method-override'
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
-import dotenv from 'dotenv'
 
 // Webpack Requirements
-import webpack from 'webpack';
-import config from '../webpack.config.dev';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
-
+import webpack from 'webpack'
+import config from '../webpack.config.dev'
+import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
 // Initialize the Express App
 const app = new Express();
-dotenv.config()
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(config);
@@ -35,67 +32,10 @@ import Helmet from 'react-helmet';
 // Import required modules
 import routes from '../client/routes'
 import { fetchComponentData } from './util/fetchData'
-import api from './routes/api/api.routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
 
-
-/* TEMP PASSPORT SETUP */
-import UserModel from './models/user'
-import passport from 'passport'
-import session from 'express-session'
-import connectMongo from 'connect-mongo'
-import { Strategy as GitHubStrategy } from 'passport-github2'
-import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth'
-
-const MongoStore = connectMongo(session)
-
-passport.serializeUser((user, done) => {
-  done(null, user._id)
-})
-
-
-passport.deserializeUser((id, done) => {
-  UserModel.findOne({ _id: id }, (err, user) => {
-    done(err, user)
-  })
-})
-
-
-passport.use(new GitHubStrategy(
-  {
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET_ID,
-    callbackURL: 'http://192.168.1.8:8000/api/auth/github/callback'
-  },
-  (accessToken, refreshToken, profile, done) => {
-    process.nextTick(() => {
-      UserModel.findOne({ github_id: profile.id }, (err, user) => {
-        if (!user) {
-          new UserModel({
-            username: profile.displayName,
-            github_id: profile.id
-          }).save(done)
-        } else {
-          done(err, profile)
-        }
-      })
-    })
-  }
-))
-
-
-passport.use(new GoogleStrategy(
-  {
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
-  },
-  (accessToken, refreshToken, profile, done) => {
-    console.log('loaded profile:', profile)
-    return done(null, profile)
-  }
-))
+import api from './routes/api/api.routes'
 
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;
@@ -112,14 +52,6 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
 });
 
 
-const sessionSettings = {
-  secret: process.env.EXPRESS_SESSION_SECRET,
-  resave: false,
-  saveUnititialized: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection })
-}
-
-
 // Apply body Parser and server public assets and routes
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use(compression())
@@ -127,62 +59,8 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 app.use(bodyParser.json())
 app.use(methodOverride())
-// passport STUFF
-app.use(session(sessionSettings))
-app.use(passport.initialize())
-app.use(passport.session())
 
-
-app.get('/user', (req, res) => {
-  res.send({
-    authenticated: req.isAuthenticated(),
-    user: req.user
-  })
-})
-
-app.put('/user', (req, res) => {
-  console.log({
-    authenticated: req.isAuthenticated(),
-    user: req.user
-  })
-  console.log('called the put user')
-  res.send({
-    authenticated: req.isAuthenticated(),
-    user: req.user
-  })
-})
-
-/* i making user that the passport user object wasnt working on put protocols */
-// app.put('/api/polls', (req, res) => {
-//   console.log('api called')
-//   console.log({
-//     authenticated: req.isAuthenticated(),
-//     user: req.user
-//   })
-//
-//   res.send({
-//     authenticated: req.isAuthenticated(),
-//     user: req.user
-//   })
-// })
 app.use('/api', api)
-
-// app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
-app.get('/api/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
-app.get('/api/auth/github/callback',
-    passport.authenticate('github', { failureRedirect: '/failed' }),
-    (req, res) => {
-      res.redirect('/')
-    }
-  )
-
-app.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
-app.get('/api/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/failed' }),
-    (req, res) => {
-      console.log('google auth callback called')
-      res.redirect('/')
-    })
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
