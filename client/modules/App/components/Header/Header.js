@@ -1,10 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router'
-import { FormattedMessage } from 'react-intl'
 
-import LoginButton from '../LoginButton/LoginButton'
+import LoginButton from '../Buttons/LoginButton/LoginButton'
+import CreatePollButton from '../Buttons/CreatePollButton/CreatePollButton'
 
-// Import Style
 import styles from './Header.css'
 
 export function Header(props, context) {
@@ -19,13 +18,14 @@ export function Header(props, context) {
             ? <LoginButton />
             : null
         }
+        <CreatePollButton />
       </div>
     </div>
   )
 }
 
 Header.contextTypes = {
-  router: React.PropTypes.object,
+  router: React.PropTypes.object
 }
 
 export default Header;
