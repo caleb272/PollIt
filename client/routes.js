@@ -16,10 +16,10 @@ if (typeof require.ensure !== 'function') {
  */
 if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
-  require('./modules/Post/pages/PostListPage/PostListPage');
-  require('./modules/Post/pages/PostDetailPage/PostDetailPage')
-  require('./modules/Poll/pages/PollListPage/PollListPage')
-  require('./modules/Poll/pages/404/404')
+  // require('./modules/Poll/pages/PollListPage/PollListPage')
+  // require('./modules/Poll/pages/CreatePollPage/CreatePollPage')
+  // require('./modules/Poll/pages/PollDetailPage/PollDetailPage')
+  // require('./modules/Poll/pages/404/404')
 }
 
 // react-router setup with code-splitting
@@ -33,30 +33,26 @@ export default (
         });
       }}
     />
-    <Route
-      path="/polls/:cuid"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, require('./modules/Poll/pages/PollDetailPage/PollDetailPage').default)
-        })
-      }}
-    />
-    <Route
-      path="/posts/:slug-:cuid"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, require('./modules/Post/pages/PostDetailPage/PostDetailPage').default)
-        });
-      }}
-    />
-    <Route
-      path="/create"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, require('./modules/Poll/pages/CreatePollPage/CreatePollPage'))
-        })
-      }}
-    />
+
+    <Route path="polls">
+      <Route
+        path="create"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./modules/Poll/pages/CreatePollPage/CreatePollPage').default)
+          })
+        }}
+      />
+      <Route
+        path="view/:cuid"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./modules/Poll/pages/PollDetailPage/PollDetailPage').default)
+          })
+        }}
+      />
+    </Route>
+
     <Route
       path="*"
       getComponent={(nextState, cb) => {

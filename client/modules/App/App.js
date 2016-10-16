@@ -10,9 +10,6 @@ import DevTools from './components/DevTools';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
-// Import Actions
-import { switchLanguage } from '../../modules/Intl/IntlActions';
-
 const enableDevTools = false
 
 export class App extends Component {
