@@ -97,8 +97,8 @@ const renderFullPage = (html, initialState) => {
         <script src='${process.env.NODE_ENV === 'production' ? assetsManifest['/app.js'] : '/app.js'}'></script>
       </body>
     </html>
-  `;
-};
+  `
+}
 
 const renderError = err => {
   const softTab = '&#32;&#32;&#32;&#32;';
@@ -159,7 +159,7 @@ app.use((req, res, next) => {
         }
       ]
 
-      const TestPollSchema = require('./models/poll').default
+      const TestPollSchema = require('./models/poll').default // eslint-disable-line
       testData.forEach(current => new TestPollSchema(current).save())
       return testData
     }
@@ -168,22 +168,33 @@ app.use((req, res, next) => {
       polls: testChartData()
     });
 
-    return fetchComponentData(store, renderProps.components, renderProps.params)
-      .then(() => {
-        const initialView = renderToString(
-          <Provider store={store}>
-            <IntlWrapper>
-              <RouterContext {...renderProps} />
-            </IntlWrapper>
-          </Provider>
-        );
 
-        const finalState = store.getState()
+    /* this works but it doesnt do server side rendering */
+    /* this also fixes the refresh not working on the CreatePollPage */
+    const finalState = store.getState()
 
-        res
-          .set('Content-Type', 'text/html')
-          .status(200)
-          .end(renderFullPage('', finalState));
+    res
+      .set('Content-Type', 'text/html')
+      .status(200)
+      .end(renderFullPage('', finalState));
+
+
+    // return fetchComponentData(store, renderProps.components, renderProps.params)
+    //   .then(() => {
+    //     const initialView = renderToString(
+    //       <Provider store={store}>
+    //         <IntlWrapper>
+    //           <RouterContext {...renderProps} />
+    //         </IntlWrapper>
+    //       </Provider>
+    //     );
+    //
+    //     const finalState = store.getState()
+    //
+    //     res
+    //       .set('Content-Type', 'text/html')
+    //       .status(200)
+    //       .end(renderFullPage('', finalState));
 
         /* warning js?8a56:36Warning: React attempted to reuse markup in a
         container but the checksum was invalid. This generally means that
@@ -198,8 +209,8 @@ app.use((req, res, next) => {
         // .end(renderFullPage(initialView, finalState));
         comments due to this error
         */
-      })
-      .catch((error) => next(error));
+      // })
+      // .catch((error) => next(error));
   });
 });
 

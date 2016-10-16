@@ -29,11 +29,6 @@ class CreatePollPage extends Component {
 }
 
 
-// Actions required to provide data for this component to render in sever side.
-CreatePollPage.need = [params => {
-  return {}
-}]
-
 // CreatePollPage.propTypes = {}
 // function mapStateToProps(state, props) {
 //   get the user here

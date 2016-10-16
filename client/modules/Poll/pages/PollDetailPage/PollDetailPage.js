@@ -16,10 +16,6 @@ function PollDetailPage(props) {
   )
 }
 
-PollDetailPage.need = [params => {
-  return {}
-}]
-
 PollDetailPage.propTypes = {
   poll: PropTypes.shape({
     title: PropTypes.string.isRequired,

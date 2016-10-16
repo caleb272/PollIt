@@ -16,10 +16,10 @@ if (typeof require.ensure !== 'function') {
  */
 if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
-  // require('./modules/Poll/pages/PollListPage/PollListPage')
-  // require('./modules/Poll/pages/CreatePollPage/CreatePollPage')
-  // require('./modules/Poll/pages/PollDetailPage/PollDetailPage')
-  // require('./modules/Poll/pages/404/404')
+  require('./modules/Poll/pages/PollListPage/PollListPage')
+  require('./modules/Poll/pages/CreatePollPage/CreatePollPage')
+  require('./modules/Poll/pages/PollDetailPage/PollDetailPage')
+  require('./modules/Poll/pages/404/404')
 }
 
 // react-router setup with code-splitting

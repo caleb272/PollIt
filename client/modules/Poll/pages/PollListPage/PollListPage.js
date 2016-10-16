@@ -24,11 +24,6 @@ class PollListPage extends Component {
   }
 }
 
-
-PollListPage.need = [params => {
-  return {}
-}]
-
 PollListPage.propTypes = {
   polls: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired
