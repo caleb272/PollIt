@@ -122,63 +122,24 @@ app.use((req, res, next) => {
       return next();
     }
 
-    function entry(title) {
-      function randomVotes() {
-        const votes = []
-        const end = Math.floor(Math.random() * 10) + 1
+    /* THIS IS TEMP TILL I SETUP THE NEED STUFF */
 
-        for (let i = 0; i < end; i++) {
-          votes.push(Math.floor(Math.random() * 999999999))
-        }
-        return votes
-      }
-
-      return {
-        title,
-        votes: randomVotes()
-      }
-    }
-
-    function testChartData() {
-      const testData = [
-        {
-          title: 'Best Programming languages',
-          author: 'Clowns',
-          authorID: '124',
-          entries: ['C++', 'Javascript', 'Java', 'C#'].map(entry),
-          // cuid: require('cuid').slug(), // eslint-disable-line
-          cuid: '123456',
-          dateCreated: Date.now()
-        },
-        {
-          title: 'Best Names',
-          author: 'Caleb Martin',
-          authorID: '123',
-          entries: ['Caleb', 'Martin', 'Ethan', 'Blake'].map(entry),
-          // cuid: require('cuid').slug(), // eslint-disable-line
-          cuid: '123457',
-          dateCreated: Date.now()
-        }
-      ]
-
-      return testData
-    }
-
-    const store = configureStore({
-      polls: testChartData()
-    });
-
+    require('./models/poll').default.find({})
+      .then(polls => sendAppToClient({ polls }))
+      .catch(err => console.error(err))
 
     /* this works but it doesnt do server side rendering */
     /* this also fixes the refresh not working on the CreatePollPage */
-    const finalState = store.getState()
+    /* it also stops need woring on the components */
+    function sendAppToClient(startingData) {
+      const store = configureStore(startingData)
+      const finalState = store.getState()
 
-    res
-      .set('Content-Type', 'text/html')
-      .status(200)
-      .end(renderFullPage('', finalState));
-
-
+      res
+        .set('Content-Type', 'text/html')
+        .status(200)
+        .end(renderFullPage('', finalState))
+    }
     // return fetchComponentData(store, renderProps.components, renderProps.params)
     //   .then(() => {
     //     const initialView = renderToString(
