@@ -1,10 +1,10 @@
-import { UPDATE_POLL } from './PollActions'
+import { CREATE_POLL, UPDATE_POLL } from './PollActions'
 
 const initialState = []
 
 function PollReducer(state = initialState, action) {
   switch (action.type) {
-    case 'ADD_POLL':
+    case CREATE_POLL:
       return [...state, action.poll]
 
     case UPDATE_POLL:
@@ -15,9 +15,11 @@ function PollReducer(state = initialState, action) {
   }
 }
 
+
 export function getPolls(state) {
   return state.polls
 }
+
 
 export function getPoll(state, cuid) {
   return state.polls.filter(poll => poll.cuid === cuid)[0]

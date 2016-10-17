@@ -4,9 +4,10 @@ const Schema = mongoose.Schema
 const pollSchema = new Schema({
   title: String,
   author: String,
+  authorID: String,
   entries: Array,
   cuid: String,
-  dateCreated: Date
+  dateCreated: Number
 })
 
 export default mongoose.model('Poll', pollSchema)

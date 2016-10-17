@@ -6,16 +6,8 @@ import { getPolls } from '../../PollReducer'
 import ChartList from '../../components/PollList'
 
 class PollListPage extends Component {
-  addPoll() {
-    const poll = (this.props.polls[this.props.polls.length - 1] + 1)
-    this.props.dispatch({
-      type: 'ADD_POLL',
-      poll
-    })
-  }
-
-
   render() {
+    console.log(this.props.polls)
     return (
       <div>
         <ChartList polls={this.props.polls} />

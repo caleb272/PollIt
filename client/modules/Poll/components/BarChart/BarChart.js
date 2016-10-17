@@ -8,7 +8,6 @@ import { updatePollRequest } from '../../PollActions'
 class BarChart extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       chart: null
     }
@@ -128,6 +127,7 @@ BarChart.propTypes = {
   pollData: PropTypes.shape({
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
+    authorID: PropTypes.string.isRequired,
     entries: PropTypes.array.isRequired,
     cuid: PropTypes.string.isRequired,
     dateCreated: PropTypes.number.isRequired

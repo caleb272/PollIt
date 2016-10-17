@@ -110,7 +110,7 @@ const renderError = err => {
 // Server Side Rendering based on routes matched by React-router.
 app.use((req, res, next) => {
   match({ routes, location: req.url }, (err, redirectLocation, renderProps) => {
-    if (err) {
+    if (err) {``
       return res.status(500).end(renderError(err));
     }
 
@@ -144,6 +144,7 @@ app.use((req, res, next) => {
         {
           title: 'Best Programming languages',
           author: 'Clowns',
+          authorID: '124',
           entries: ['C++', 'Javascript', 'Java', 'C#'].map(entry),
           // cuid: require('cuid').slug(), // eslint-disable-line
           cuid: '123456',
@@ -152,6 +153,7 @@ app.use((req, res, next) => {
         {
           title: 'Best Names',
           author: 'Caleb Martin',
+          authorID: '123',
           entries: ['Caleb', 'Martin', 'Ethan', 'Blake'].map(entry),
           // cuid: require('cuid').slug(), // eslint-disable-line
           cuid: '123457',

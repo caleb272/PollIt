@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import BarChart from '../../components/BarChart/BarChart'
+import { createPollRequest } from '../../PollActions'
 
 
 class CreatePollPage extends Component {
@@ -14,6 +15,7 @@ class CreatePollPage extends Component {
       poll: {
         title: '',
         author: '',
+        authorID: '',
         entries: [],
         cuid: '0',
         dateCreated: Date.now()
@@ -22,12 +24,18 @@ class CreatePollPage extends Component {
   }
 
 
-  onEntryInputChange(action) {
+  handleTitleInputChange(action) {
+    action.preventDefault()
+    this.state.poll.title = action.target.value
+  }
+
+
+  handleEntryInputChange(action) {
     this.setState({ entryInput: action.target.value })
   }
 
 
-  onEntryInputKeyDown(action) {
+  handleEntryInputKeyDown(action) {
     if (action.which === 13) {
       this.addEntry(this.state.entryInput)
     }
@@ -63,7 +71,26 @@ class CreatePollPage extends Component {
   createEntry(title) {
     return {
       title,
-      votes: [123123, 123123]
+      votes: []
+    }
+  }
+
+
+  createPoll() {
+    const poll = this.state.poll
+    if (poll.title && poll.entries.length > 1) {
+      this.props.dispatch(createPollRequest(poll))
+    } else {
+      this.alertIncompletePoll(poll)
+    }
+  }
+
+
+  alertIncompletePoll(poll) {
+    if (!poll.title) {
+      alert('no title')
+    } else {
+      alert('you need atleast two entries')
     }
   }
 
@@ -71,29 +98,43 @@ class CreatePollPage extends Component {
   render() {
     return (
       <div>
-        {!this.state.refresh ? <BarChart pollData={this.state.poll} /> : null}
+        <form onSubmit={action => action.preventDefault()}>
+          <label htmlFor="title-input">Title</label>
+          <input
+            id="title-input"
+            type="text"
+            autoComplete="off"
+            onChange={this.handleTitleInputChange.bind(this)}
+          />
+        </form>
+
+        <div>
+          {!this.state.refresh ? <BarChart pollData={this.state.poll} /> : null}
+        </div>
+
         <form onSubmit={action => action.preventDefault()}>
           <label htmlFor="add-entry">Entry Name</label>
           <input
             id="add-entry"
             type="text"
-            onKeyDown={this.onEntryInputKeyDown.bind(this)}
-            onChange={this.onEntryInputChange.bind(this)}
+            onKeyDown={this.handleEntryInputKeyDown.bind(this)}
+            onChange={this.handleEntryInputChange.bind(this)}
             value={this.state.entryInput}
           />
-        <button onClick={this.addEntryButtonClicked.bind(this)}>Add Entry</button>
+
+          <button onClick={this.addEntryButtonClicked.bind(this)}>Add Entry</button>
         </form>
+        <button onClick={this.createPoll.bind(this)}>Create</button>
       </div>
     )
   }
 }
 
 
-// CreatePollPage.propTypes = {}
-// function mapStateToProps(state, props) {
-//   get the user here
-// }
+CreatePollPage.propTypes = {
+  dispatch: PropTypes.func.isRequired
+}
 
 
 // export default connect()(CreatePollPage)
-export default CreatePollPage
+export default connect()(CreatePollPage)
