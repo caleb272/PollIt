@@ -33,7 +33,7 @@ class BarChart extends Component {
         .padding(0.05)
     const yScale = d3.scaleLinear()
         .range([chartHeight, 0])
-        .domain([0, d3.max(entries, entry => entry.votes.length)])
+        .domain(getYScaleDomain())
 
     const xAxis = d3.axisBottom(xScale)
     const yAxis = d3.axisLeft(yScale)
@@ -57,6 +57,8 @@ class BarChart extends Component {
         .attr('x', entry => xScale(entry.title))
         .attr('y', entry => yScale(entry.votes.length))
         .on('click', (bar) => {
+          // TODO: come back to this and make it work
+          /* */
           // this.props.dispatch(updatePollRequest(this.props.pollData.title, 0, bar.title))
           this.props.dispatch(updatePollRequest(this.props.pollData.cuid, 0, bar.title))
             .then(updatedPoll => onBarClicked(bar))
@@ -72,6 +74,16 @@ class BarChart extends Component {
         .attr('transform', 'translate(0, 0)')
         .call(yAxis)
 
+    function getYScaleDomain() {
+      const lowestVotedBar = d3.min(entries, entry => entry.votes.length)
+      const heighestVotedBar = d3.max(entries, entry => entry.votes.length)
+      return [
+        lowestVotedBar > 0 ? 0 : -1,
+        heighestVotedBar > 0 ? heighestVotedBar : 1
+      ]
+    }
+
+
     function getBarHeight(entry) {
       return chartHeight - yScale(entry.votes.length)
     }
@@ -82,7 +94,7 @@ class BarChart extends Component {
       bar.votes.push(Math.floor(Math.random() * 9999999999))
 
       xScale.domain(entries.map(entry => entry.title))
-      yScale.domain([0, d3.max(entries, entry => entry.votes.length)])
+      yScale.domain(getYScaleDomain())
 
       bars
           .transition()
