@@ -4,6 +4,7 @@ import { slug } from 'cuid'
 export function createPoll(req, res) {
   if (!req.user) {
     res.redirect('/api/auth/github')
+    return
   }
 
   const poll = req.body

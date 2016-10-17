@@ -161,8 +161,6 @@ app.use((req, res, next) => {
         }
       ]
 
-      const TestPollSchema = require('./models/poll').default // eslint-disable-line
-      testData.forEach(current => new TestPollSchema(current).save())
       return testData
     }
 
