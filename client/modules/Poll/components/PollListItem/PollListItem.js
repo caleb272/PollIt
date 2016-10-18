@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import BarChart from '../BarChart/BarChart'
+import BarChart from '../BarChart/VoteableBarChart'
 
 function PollListItem(props) {
   return (
@@ -10,7 +10,7 @@ function PollListItem(props) {
           {props.poll.title}
         </Link>
       </h3>
-      <BarChart pollData={props.poll} />
+      <BarChart poll={props.poll} />
     </center></div>
   )
 }

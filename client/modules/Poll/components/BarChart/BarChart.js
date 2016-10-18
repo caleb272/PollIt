@@ -3,11 +3,6 @@ import * as d3 from 'd3'
 import ReactFauxDOM from 'react-faux-dom'
 import { connect } from 'react-redux'
 
-import votingTools from '../../../../../tools/voting_tools'
-
-import { updatePollRequest } from '../../PollActions'
-import { getUser } from '../../PollReducer'
-
 class BarChart extends Component {
   constructor(props) {
     super(props)
@@ -23,7 +18,7 @@ class BarChart extends Component {
 
 
   buildChart({ entries }) {
-    let pollEntries = entries
+    const pollEntries = entries
     const that = this
     const fauxDOM = ReactFauxDOM.createElement('div')
     const padding = { left: 30, top: 10, right: 10, bottom: 20 }
@@ -60,7 +55,7 @@ class BarChart extends Component {
         .attr('height', getBarHeight)
         .attr('x', entry => xScale(entry.title))
         .attr('y', entry => yScale(entry.votes.length))
-        .on('click', voteOnBar)
+        .on('click', callOnBarClickEvent)
 
     chart.append('g')
         .classed('x axis', true)
@@ -87,33 +82,22 @@ class BarChart extends Component {
     }
 
 
-    function voteOnBar(bar) {
-      votingTools.voteOnPollEntries(that.props.user.github_id, bar.title, pollEntries)
-      updateVotedOnBars()
-
-      // use the data on the client side to figure out what changes on the chart
-      // then once the server returns the data verify and update if necessary
-      that.props.dispatch(updatePollRequest(that.props.pollData.cuid, bar.title, that.props.user.github_id))
-        .then(() => {
-          // get the difference between the new and old state also modify it if there is one so D3 knows something changed
-          const newEntries = that.props.pollData.entries
-          for (let i = 0; i < newEntries.length; i++) {
-            if (pollEntries[i].votes !== newEntries[i].votes) {
-              pollEntries[i].votes = newEntries[i].votes
-            }
-          }
-          updateVotedOnBars(bar)
-        })
+    function callOnBarClickEvent(bar) {
+      const eventCallback = that.props.barClickedEvent
+      if (eventCallback) {
+        eventCallback(bar, updateVotedOnBars.bind(this))
+      }
     }
 
 
-    function updateVotedOnBars(bar) {
+    function updateVotedOnBars() {
       const transitionDuration = 500
 
       xScale.domain(pollEntries.map(entry => entry.title))
       yScale.domain(getYScaleDomain())
 
       bars
+          .data(that.props.pollData.entries)
           .transition()
           .duration(transitionDuration)
           .attr('height', (entry) => chartHeight - yScale(entry.votes.length))
@@ -138,6 +122,10 @@ class BarChart extends Component {
     }
 
     this.updateChartState(fauxDOM)
+
+    that.props.setTriggerUpdate(() => {
+      this.updateChartState(fauxDOM)
+    })
   }
 
 
@@ -161,19 +149,10 @@ BarChart.propTypes = {
     cuid: PropTypes.string.isRequired,
     dateCreated: PropTypes.number.isRequired
   }),
-  user: PropTypes.shape({
-    username: PropTypes.string.isRequired,
-    github_id: PropTypes.string.isRequired
-  }),
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  barClickedEvent: PropTypes.func,
+  setTriggerUpdate: PropTypes.func
 }
 
 
-function mapStateToProps(state) {
-  return {
-    user: getUser(state)
-  }
-}
-
-
-export default connect(mapStateToProps)(BarChart)
+export default connect()(BarChart)
