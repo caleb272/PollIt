@@ -125,7 +125,7 @@ class BarChart extends Component {
 
     if (that.props.setTriggerUpdate) {
       that.props.setTriggerUpdate(() => {
-        this.updateChartState(fauxDOM)
+        this.buildChart(this.props.pollData)
       })
     }
   }

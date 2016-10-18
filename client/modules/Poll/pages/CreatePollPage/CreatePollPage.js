@@ -11,7 +11,6 @@ class CreatePollPage extends Component {
 
     this.state = {
       entryInput: '',
-      refresh: false,
       poll: {
         title: '',
         author: '',
@@ -19,8 +18,14 @@ class CreatePollPage extends Component {
         entries: [],
         cuid: '0',
         dateCreated: Date.now()
-      }
+      },
+      triggerPollUpdate: () => {}
     }
+  }
+
+
+  setTriggerPollUpdate(triggerPollUpdate) {
+    this.setState({ triggerPollUpdate })
   }
 
 
@@ -50,10 +55,10 @@ class CreatePollPage extends Component {
   addEntry(title) {
     if (this.findEntry(title) === -1 && title.length > 0) {
       this.state.poll.entries.push(this.createEntry(title))
-      this.setState({ refresh: true })
-      setTimeout(() => this.setState({ refresh: false }), 10)
     }
     this.setState({ entryInput: '' })
+    this.setState({ poll: this.state.poll })
+    this.state.triggerPollUpdate()
   }
 
 
@@ -109,7 +114,7 @@ class CreatePollPage extends Component {
         </form>
 
         <div>
-          {!this.state.refresh ? <BarChart pollData={this.state.poll} /> : null}
+          <BarChart pollData={this.state.poll} setTriggerUpdate={this.setTriggerPollUpdate.bind(this)} />
         </div>
 
         <form onSubmit={action => action.preventDefault()}>
