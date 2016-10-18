@@ -35,6 +35,7 @@ import { fetchComponentData } from './util/fetchData'
 import dummyData from './dummyData'
 import serverConfig from './config'
 
+import auth from './routes/api/auth/auth'
 import api from './routes/api/api.routes'
 
 // Set native promises as mongoose promise
@@ -60,6 +61,7 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 app.use(bodyParser.json())
 app.use(methodOverride())
 
+app.use(auth)
 app.use('/api', api)
 
 // Render Initial HTML
@@ -123,9 +125,8 @@ app.use((req, res, next) => {
     }
 
     /* THIS IS TEMP TILL I SETUP THE NEED STUFF */
-
     require('./models/poll').default.find({})
-      .then(polls => sendAppToClient({ polls }))
+      .then(polls => sendAppToClient({ polls, user: req.user }))
       .catch(err => console.error(err))
 
     /* this works but it doesnt do server side rendering */

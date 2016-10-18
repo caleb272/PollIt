@@ -5,15 +5,12 @@ import { getPolls } from '../../PollReducer'
 
 import ChartList from '../../components/PollList'
 
-class PollListPage extends Component {
-  render() {
-    console.log(this.props.polls)
-    return (
-      <div>
-        <ChartList polls={this.props.polls} />
-      </div>
-    )
-  }
+export function PollListPage(props) {
+  return (
+    <div>
+      <ChartList polls={props.polls} />
+    </div>
+  )
 }
 
 PollListPage.propTypes = {

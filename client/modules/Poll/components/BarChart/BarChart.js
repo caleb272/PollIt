@@ -4,6 +4,7 @@ import ReactFauxDOM from 'react-faux-dom'
 import { connect } from 'react-redux'
 
 import { updatePollRequest } from '../../PollActions'
+import { getUser } from '../../PollReducer'
 
 class BarChart extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class BarChart extends Component {
 
 
   buildChart({ entries }) {
+    let pollEntries = entries
     const that = this
     const fauxDOM = ReactFauxDOM.createElement('div')
     const padding = { left: 30, top: 10, right: 10, bottom: 20 }
@@ -28,7 +30,7 @@ class BarChart extends Component {
 
     const xScale = d3.scaleBand()
         .rangeRound([0, chartWidth])
-        .domain(entries.map(entry => entry.title))
+        .domain(pollEntries.map(entry => entry.title))
         .paddingOuter(0.05)
         .padding(0.05)
     const yScale = d3.scaleLinear()
@@ -49,23 +51,14 @@ class BarChart extends Component {
         .attr('height', chartHeight)
 
     const bars = chart.selectAll('rect')
-        .data(entries).enter()
+        .data(pollEntries).enter()
       .append('rect')
         .attr('fill', 'orange')
         .attr('width', xScale.bandwidth())
         .attr('height', getBarHeight)
         .attr('x', entry => xScale(entry.title))
         .attr('y', entry => yScale(entry.votes.length))
-        .on('click', (bar) => {
-          // TODO: come back to this and make it work
-          /* */
-          // this.props.dispatch(updatePollRequest(this.props.pollData.title, 0, bar.title))
-          this.props.dispatch(updatePollRequest(this.props.pollData.cuid, null, bar.title))
-            .then(updatedPoll => {
-              console.log('barChart.updatedPoll:', updatedPoll)
-              onBarClicked(bar)
-            })
-        })
+        .on('click', voteOnBar)
 
     chart.append('g')
         .classed('x axis', true)
@@ -78,8 +71,8 @@ class BarChart extends Component {
         .call(yAxis)
 
     function getYScaleDomain() {
-      const lowestVotedBar = d3.min(entries, entry => entry.votes.length)
-      const heighestVotedBar = d3.max(entries, entry => entry.votes.length)
+      const lowestVotedBar = d3.min(pollEntries, entry => entry.votes.length)
+      const heighestVotedBar = d3.max(pollEntries, entry => entry.votes.length)
       return [
         lowestVotedBar > 0 ? 0 : -1,
         heighestVotedBar > 0 ? heighestVotedBar : 1
@@ -92,11 +85,29 @@ class BarChart extends Component {
     }
 
 
-    function onBarClicked(bar) {
-      const transitionDuration = 500
-      bar.votes.push(Math.floor(Math.random() * 9999999999))
+    function voteOnBar(bar) {
+      // bar.votes.push(that.props.user.github_id)
+      // use the data on the client side to figure out what changes on the chart
+      // then once the server returns the data verify and update if necessary
+      that.props.dispatch(updatePollRequest(that.props.pollData.cuid, bar.title, that.props.user.github_id))
+        .then(() => {
+          // get the difference between the new and old state also modify it if there is one so D3 knows something changed
+          const newEntries = that.props.pollData.entries
+          for (let i = 0; i < newEntries.length; i++) {
+            if (pollEntries[i].votes !== newEntries[i].votes) {
+              pollEntries[i].votes = newEntries[i].votes
+            }
+          }
+          updateVotedOnBars(bar)
+        })
+      // updateVotedOnBars(bar)
+    }
 
-      xScale.domain(entries.map(entry => entry.title))
+
+    function updateVotedOnBars(bar) {
+      const transitionDuration = 500
+
+      xScale.domain(pollEntries.map(entry => entry.title))
       yScale.domain(getYScaleDomain())
 
       bars
@@ -146,8 +157,20 @@ BarChart.propTypes = {
     entries: PropTypes.array.isRequired,
     cuid: PropTypes.string.isRequired,
     dateCreated: PropTypes.number.isRequired
-  })
+  }),
+  user: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+    github_id: PropTypes.string.isRequired
+  }),
+  dispatch: PropTypes.func.isRequired
 }
 
-// export default BarChart
-export default connect()(BarChart)
+
+function mapStateToProps(state) {
+  return {
+    user: getUser(state)
+  }
+}
+
+
+export default connect(mapStateToProps)(BarChart)

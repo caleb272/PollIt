@@ -45,7 +45,7 @@ function createPollInDB(poll) {
 
 
 export function updatePoll(req, res) {
-  if (!voterID || !req.user) {
+  if (!voterID && !req.user) {
     send(null, 'no voter id')
     return
   }

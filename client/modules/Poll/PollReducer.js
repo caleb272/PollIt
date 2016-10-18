@@ -1,6 +1,6 @@
 import { CREATE_POLL, UPDATE_POLL } from './PollActions'
 
-const initialState = []
+const initialState = { polls: [], user: null }
 
 function PollReducer(state = initialState, action) {
   switch (action.type) {
@@ -23,6 +23,10 @@ export function getPolls(state) {
 
 export function getPoll(state, cuid) {
   return state.polls.filter(poll => poll.cuid === cuid)[0]
+}
+
+export function getUser(state) {
+  return state.user
 }
 
 export default PollReducer

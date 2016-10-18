@@ -18,9 +18,9 @@ export function createPollRequest(poll) {
 }
 
 
-export function updatePollRequest(cuid, voterID, entryTitle) {
+export function updatePollRequest(cuid, entryTitle, voterID) {
   return function dispatchedRequest(dispatch) {
-    return callApi('polls', 'PUT', { cuid, voterID, entryTitle })
+    return callApi('polls', 'PUT', { cuid, entryTitle, voterID })
     .then(({ updatedPoll }) => {
       if (updatedPoll) {
         console.log('updatedPoll:', updatedPoll)
