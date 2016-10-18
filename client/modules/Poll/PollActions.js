@@ -3,15 +3,6 @@ import callApi from '../../util/apiCaller'
 export const UPDATE_POLL = 'UPDATE_POLL'
 export const CREATE_POLL = 'CREATE_POLL'
 
-export function updatePollRequest(pollID, voterID, entryTitle) {
-  return function dispatchedRequest(dispatch) {
-    return callApi('polls', 'PUT', { pollID, voterID, entryTitle })
-      .then(response => dispatch(updatePoll(response.updatedPoll)))
-      .catch(err => console.error(err)) // eslint-disable-line
-  }
-}
-
-
 export function createPollRequest(poll) {
   return function dispatchedRequest(dispatch) {
     return callApi('polls', 'POST', poll)
@@ -27,10 +18,18 @@ export function createPollRequest(poll) {
 }
 
 
-export function updatePoll(poll) {
-  return {
-    type: UPDATE_POLL,
-    poll
+export function updatePollRequest(cuid, voterID, entryTitle) {
+  return function dispatchedRequest(dispatch) {
+    return callApi('polls', 'PUT', { cuid, voterID, entryTitle })
+    .then(({ updatedPoll }) => {
+      if (updatedPoll) {
+        console.log('updatedPoll:', updatedPoll)
+        dispatch(updatePoll(updatedPoll))
+      } else {
+        dispatch(noChange())
+      }
+    })
+    .catch(err => console.error(err)) // eslint-disable-line
   }
 }
 
@@ -43,8 +42,16 @@ export function createPoll(poll) {
 }
 
 
+export function updatePoll(poll) {
+  return {
+    type: UPDATE_POLL,
+    poll
+  }
+}
+
+
 export function noChange() {
   return {
-    type: "NO_CHANGE"
+    type: 'NO_CHANGE'
   }
 }

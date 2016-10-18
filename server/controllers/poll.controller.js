@@ -13,9 +13,8 @@ export function createPoll(req, res) {
   poll.cuid = slug()
   poll.dateCreated = Date.now()
 
-  doesPollExist(poll)
+  checkIfPollExists(poll)
     .then((doesExist) => {
-      console.log('does exist:', doesExist)
       if (doesExist) {
         send(null, 'poll already exists')
       } else {
@@ -28,24 +27,13 @@ export function createPoll(req, res) {
       send(null, 'couldnt create poll')
     })
 
-    function send(createdPoll, message) {
-      res.send({ createdPoll, message })
-    }
+  function send(createdPoll, message) {
+    res.send({ createdPoll, message })
+  }
 }
 
 
-export function updatePoll(req, res) {
-  console.log('your is authenticated:', req.isAuthenticated())
-  console.log('yoru ip address:', req.connection.remoteAddress)
-  // Poll.findOne({ cuid: req.body.pollID })
-  //   .then(found => console.log('found with pollID :', found))
-  //   .catch(err => console.log(err))
-
-  res.send({ updatedPoll: req.body })
-}
-
-
-function doesPollExist(poll) {
+function checkIfPollExists(poll) {
   return Poll.findOne({ title: poll.title })
     .then(found => !!found)
 }
@@ -53,4 +41,71 @@ function doesPollExist(poll) {
 
 function createPollInDB(poll) {
   return new Poll(poll).save()
+}
+
+
+export function updatePoll(req, res) {
+  if (!voterID || !req.user) {
+    send(null, 'no voter id')
+    return
+  }
+
+  const voterID = req.body.voterID || req.user.github_id
+  const entryTitle = req.body.entryTitle
+  const query = { cuid: req.body.cuid }
+
+  Poll.findOne(query)
+    .then((poll) => {
+      return voteOnPoll(voterID, entryTitle, poll)
+        .then(updatedPoll => send(updatedPoll, 'it works'))
+    })
+    .catch(err => console.error(err))
+
+    // console.log('your is authenticated:', req.isAuthenticated())
+    // console.log('yoru ip address:', req.connection.remoteAddress)
+  function send(updatedPoll, message) {
+    res.send({ updatedPoll, message })
+  }
+}
+
+
+function voteOnPoll(voterID, entryTitle, poll) {
+  const lastVotedOnEntry = getVotedOnEntryByVoter(voterID, poll)
+  if (lastVotedOnEntry) {
+    const votedOnEntry = getEntryByTitle(entryTitle, poll)
+
+    lastVotedOnEntry.votes = lastVotedOnEntry.votes.filter(vote => vote !== voterID)
+    if (votedOnEntry !== lastVotedOnEntry) {
+      votedOnEntry.votes.push(voterID)
+    }
+  } else {
+    getEntryByTitle(entryTitle, poll).votes.push(voterID)
+  }
+
+  poll.markModified('entries')
+  return poll.save()
+}
+
+
+function getVotedOnEntryByVoter(voterID, { entries }) {
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i]
+    if (entry.votes.includes(voterID)) {
+      return entry
+    }
+  }
+
+  return null
+}
+
+
+function getEntryByTitle(entryTitle, { entries }) {
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i]
+    if (entry.title === entryTitle) {
+      return entry
+    }
+  }
+
+  return null
 }

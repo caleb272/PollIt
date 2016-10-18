@@ -60,8 +60,11 @@ class BarChart extends Component {
           // TODO: come back to this and make it work
           /* */
           // this.props.dispatch(updatePollRequest(this.props.pollData.title, 0, bar.title))
-          this.props.dispatch(updatePollRequest(this.props.pollData.cuid, 0, bar.title))
-            .then(updatedPoll => onBarClicked(bar))
+          this.props.dispatch(updatePollRequest(this.props.pollData.cuid, null, bar.title))
+            .then(updatedPoll => {
+              console.log('barChart.updatedPoll:', updatedPoll)
+              onBarClicked(bar)
+            })
         })
 
     chart.append('g')
