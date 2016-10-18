@@ -3,6 +3,8 @@ import * as d3 from 'd3'
 import ReactFauxDOM from 'react-faux-dom'
 import { connect } from 'react-redux'
 
+import votingTools from '../../../../../tools/voting_tools'
+
 import { updatePollRequest } from '../../PollActions'
 import { getUser } from '../../PollReducer'
 
@@ -86,7 +88,9 @@ class BarChart extends Component {
 
 
     function voteOnBar(bar) {
-      // bar.votes.push(that.props.user.github_id)
+      votingTools.voteOnPollEntries(that.props.user.github_id, bar.title, pollEntries)
+      updateVotedOnBars()
+
       // use the data on the client side to figure out what changes on the chart
       // then once the server returns the data verify and update if necessary
       that.props.dispatch(updatePollRequest(that.props.pollData.cuid, bar.title, that.props.user.github_id))
@@ -100,7 +104,6 @@ class BarChart extends Component {
           }
           updateVotedOnBars(bar)
         })
-      // updateVotedOnBars(bar)
     }
 
 

@@ -1,4 +1,5 @@
 import Poll from '../models/poll'
+import votingTools from '../../tools/voting_tools'
 import { slug } from 'cuid'
 
 export function createPoll(req, res) {
@@ -56,56 +57,16 @@ export function updatePoll(req, res) {
 
   Poll.findOne(query)
     .then((poll) => {
-      return voteOnPoll(voterID, entryTitle, poll)
-        .then(updatedPoll => send(updatedPoll, 'it works'))
+      votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
+      poll.markModified('entries')
+      poll.save()
+      .then(updatedPoll => send(updatedPoll, 'updated poll'))
     })
-    .catch(err => console.error(err))
+    .catch(err => console.error(err)) // eslint-disable-line
 
     // console.log('your is authenticated:', req.isAuthenticated())
     // console.log('yoru ip address:', req.connection.remoteAddress)
   function send(updatedPoll, message) {
     res.send({ updatedPoll, message })
   }
-}
-
-
-function voteOnPoll(voterID, entryTitle, poll) {
-  const lastVotedOnEntry = getVotedOnEntryByVoter(voterID, poll)
-  if (lastVotedOnEntry) {
-    const votedOnEntry = getEntryByTitle(entryTitle, poll)
-
-    lastVotedOnEntry.votes = lastVotedOnEntry.votes.filter(vote => vote !== voterID)
-    if (votedOnEntry !== lastVotedOnEntry) {
-      votedOnEntry.votes.push(voterID)
-    }
-  } else {
-    getEntryByTitle(entryTitle, poll).votes.push(voterID)
-  }
-
-  poll.markModified('entries')
-  return poll.save()
-}
-
-
-function getVotedOnEntryByVoter(voterID, { entries }) {
-  for (let i = 0; i < entries.length; i++) {
-    const entry = entries[i]
-    if (entry.votes.includes(voterID)) {
-      return entry
-    }
-  }
-
-  return null
-}
-
-
-function getEntryByTitle(entryTitle, { entries }) {
-  for (let i = 0; i < entries.length; i++) {
-    const entry = entries[i]
-    if (entry.title === entryTitle) {
-      return entry
-    }
-  }
-
-  return null
 }
