@@ -123,9 +123,11 @@ class BarChart extends Component {
 
     this.updateChartState(fauxDOM)
 
-    that.props.setTriggerUpdate(() => {
-      this.updateChartState(fauxDOM)
-    })
+    if (that.props.setTriggerUpdate) {
+      that.props.setTriggerUpdate(() => {
+        this.updateChartState(fauxDOM)
+      })
+    }
   }
 
 
