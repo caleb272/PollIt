@@ -38,6 +38,9 @@ import serverConfig from './config'
 import auth from './routes/api/auth/auth'
 import api from './routes/api/api.routes'
 
+// temp imports figure out how to do this proper
+import pollSymbol from '../client/icons/poll-symbol.svg'
+
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;
 
@@ -72,6 +75,8 @@ const renderFullPage = (html, initialState) => {
   const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets);
   const chunkManifest = process.env.webpackChunkAssets && JSON.parse(process.env.webpackChunkAssets);
 
+  // the old favicon
+  // <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
   return `
     <!doctype html>
     <html>
@@ -84,11 +89,13 @@ const renderFullPage = (html, initialState) => {
 
         ${process.env.NODE_ENV === 'production' ? `<link rel='stylesheet' href='${assetsManifest['/app.css']}' />` : ''}
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'/>
-        <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
+        <link rel="shortcut icon" href='${process.env.NODE_ENV === 'production' ? assetsManifest['/poll-symbol.png'] : pollSymbol}' />
       </head>
       <body>
         <div id="root">${html}</div>
         <script>
+          // this might fix the react attempted to reuse markup in container error try out later
+          // window.APP_STATE
           window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
           ${process.env.NODE_ENV === 'production' ?
           `//<![CDATA[
@@ -158,6 +165,15 @@ app.use((req, res, next) => {
     //       .status(200)
     //       .end(renderFullPage('', finalState));
 
+      /* this should fix the error being throw specifically data={window.APP_STATE}
+        render((
+            <ContextWrapper data={window.APP_STATE}>
+            <Router history={createHistory()}>
+            {routes}
+            </Router>
+            </ContextWrapper>
+        ), document.querySelectorAll('[data-ui-role="content"]')[0]);
+    */
         /* warning js?8a56:36Warning: React attempted to reuse markup in a
         container but the checksum was invalid. This generally means that
         you are using server rendering and the markup generated on the server was
