@@ -56,15 +56,20 @@ export function sortPollEntries(poll) {
   }
 
   const { sortOrder, entries } = poll
-  const noVotes = Boolean(entries.filter(current => current.votes.length > 0).length === 0)
+  const defaultToOriginalIndex = (first, second, sortCallback) => {
+    if (first.votes.length + second.votes.length > 0) {
+      return sortCallback(first.votes.length, second.votes.length)
+    }
+    return first.originalEntryIndex > second.originalEntryIndex
+  }
 
   entries.sort((first, second) => {
-    switch (noVotes ? NONE : sortOrder) {
+    switch (sortOrder) {
       case LOW_TO_HIGH:
-        return ((first.votes.length > second.votes.length) || (first.originalEntryIndex > second.originalEntryIndex))
+        return defaultToOriginalIndex(first, second, (firstVotes, secondVotes) => firstVotes > secondVotes)
 
       case HIGH_TO_LOW:
-        return ((first.votes.length < second.votes.length) || (first.originalEntryIndex > second.originalEntryIndex))
+        return defaultToOriginalIndex(first, second, (firstVotes, secondVotes) => firstVotes < secondVotes)
 
       case ALPHABETICAL:
         return first.title > second.title
@@ -74,5 +79,6 @@ export function sortPollEntries(poll) {
         return first.originalEntryIndex > second.originalEntryIndex
     }
   })
+
   return poll
 }

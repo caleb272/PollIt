@@ -23,19 +23,17 @@ class VoteableBarChart extends Component {
 
 
   barClickedEvent(entry, updateVotedOnBars) {
-    // votingTools.voteOnPollEntries(this.props.user.github_id, entry.title, this.props.poll.entries)
-    votingTools.voteOnPollEntries(Math.floor(Math.random() * 999999), entry.title, this.props.poll.entries)
+    votingTools.voteOnPollEntries(this.props.user.github_id, entry.title, this.props.poll.entries)
     sortPollEntries(this.props.poll)
     updateVotedOnBars()
 
     // use the data on the client side to figure out what changes on the chart
     // then once the server returns the data verify and update if necessary
-
-    // this.props.dispatch(updatePollRequest(this.props.poll.cuid, entry.title, this.props.user.github_id))
-    //   .then(() => {
-    //     sortPollEntries(this.props.poll)
-    //     updateVotedOnBars()
-    //   })
+    this.props.dispatch(updatePollRequest(this.props.poll.cuid, entry.title, this.props.user.github_id))
+      .then(() => {
+        sortPollEntries(this.props.poll)
+        updateVotedOnBars()
+      })
   }
 
 
