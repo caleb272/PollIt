@@ -30,9 +30,13 @@ class BarChart extends Component {
         .domain(pollEntries.map(entry => entry.title))
         .paddingOuter(0.05)
         .padding(0.05)
+
     const yScale = d3.scaleLinear()
         .range([chartHeight, 0])
         .domain(getYScaleDomain())
+
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10)
+        .domain([0, pollEntries.length])
 
     const xAxis = d3.axisBottom(xScale)
     const yAxis = d3.axisLeft(yScale)
@@ -55,6 +59,7 @@ class BarChart extends Component {
         .attr('height', getBarHeight)
         .attr('x', entry => xScale(entry.title))
         .attr('y', entry => yScale(entry.votes.length))
+        .attr('fill', (entry, index) => colorScale(index))
         .on('click', callOnBarClickEvent)
 
     chart.append('g')
