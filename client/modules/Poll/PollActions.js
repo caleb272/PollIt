@@ -23,7 +23,6 @@ export function updatePollRequest(cuid, entryTitle, voterID) {
     return callApi('polls', 'PUT', { cuid, entryTitle, voterID })
     .then(({ updatedPoll }) => {
       if (updatedPoll) {
-        console.log('updatedPoll:', updatedPoll)
         dispatch(updatePoll(updatedPoll))
       } else {
         dispatch(noChange())

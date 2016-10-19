@@ -41,3 +41,38 @@ export default (function votingTools() {
     voteOnPollEntries
   }
 }())
+
+
+const NONE = 'None'
+const LOW_TO_HIGH = 'Low to High'
+const HIGH_TO_LOW = 'High to Low'
+const ALPHABETICAL = 'Alphabetical'
+
+export const sortOptions = [NONE, LOW_TO_HIGH, HIGH_TO_LOW, ALPHABETICAL]
+
+export function sortPollEntries(poll) {
+  if (!poll) {
+    return null
+  }
+
+  const { sortOrder, entries } = poll
+  const noVotes = Boolean(entries.filter(current => current.votes.length > 0).length === 0)
+
+  entries.sort((first, second) => {
+    switch (noVotes ? NONE : sortOrder) {
+      case LOW_TO_HIGH:
+        return ((first.votes.length > second.votes.length) || (first.originalEntryIndex > second.originalEntryIndex))
+
+      case HIGH_TO_LOW:
+        return ((first.votes.length < second.votes.length) || (first.originalEntryIndex > second.originalEntryIndex))
+
+      case ALPHABETICAL:
+        return first.title > second.title
+
+      case NONE:
+      default:
+        return first.originalEntryIndex > second.originalEntryIndex
+    }
+  })
+  return poll
+}

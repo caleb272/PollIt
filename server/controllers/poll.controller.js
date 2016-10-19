@@ -59,8 +59,8 @@ export function updatePoll(req, res) {
     .then((poll) => {
       votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
       poll.markModified('entries')
-      poll.save()
-      .then(updatedPoll => send(updatedPoll, 'updated poll'))
+      return poll.save()
+        .then(updatedPoll => send(updatedPoll, 'updated poll'))
     })
     .catch(err => console.error(err)) // eslint-disable-line
 

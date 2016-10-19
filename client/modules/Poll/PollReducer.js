@@ -1,4 +1,5 @@
 import { CREATE_POLL, UPDATE_POLL } from './PollActions'
+import { sortPollEntries } from '../../../tools/voting_tools'
 
 const initialState = { polls: [], user: null }
 
@@ -17,12 +18,12 @@ function PollReducer(state = initialState, action) {
 
 
 export function getPolls(state) {
-  return state.polls
+  return state.polls.map(sortPollEntries)
 }
 
 
 export function getPoll(state, cuid) {
-  return state.polls.filter(poll => poll.cuid === cuid)[0]
+  return sortPollEntries(state.polls.filter(poll => poll.cuid === cuid)[0])
 }
 
 export function getUser(state) {

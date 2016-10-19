@@ -5,6 +5,7 @@ const pollSchema = new Schema({
   title: String,
   author: String,
   authorID: String,
+  sortOrder: String,
   entries: Array,
   cuid: String,
   dateCreated: Number

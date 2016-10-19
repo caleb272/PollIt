@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { getPoll } from '../../PollReducer'
-import BarChart from '../../components/BarChart/BarChart'
+import VoteableBarChart from '../../components/BarChart/VoteableBarChart'
 
 function PollDetailPage(props) {
   return (
     <div>
       <center>
         <h3>{props.poll.title}</h3>
-        <BarChart
-          pollData={props.poll}
+        <VoteableBarChart
+          poll={props.poll}
         />
       </center>
     </div>

@@ -18,7 +18,7 @@ class BarChart extends Component {
 
 
   buildChart({ entries }) {
-    const pollEntries = entries
+    let pollEntries = entries
     const that = this
     const fauxDOM = ReactFauxDOM.createElement('div')
     const padding = { left: 30, top: 10, right: 10, bottom: 20 }
@@ -54,22 +54,23 @@ class BarChart extends Component {
     const bars = chart.selectAll('rect')
         .data(pollEntries).enter()
       .append('rect')
-        .attr('fill', 'orange')
+        .attr('fill', (entry) => colorScale(entry.originalEntryIndex))
         .attr('width', xScale.bandwidth())
         .attr('height', getBarHeight)
         .attr('x', entry => xScale(entry.title))
         .attr('y', entry => yScale(entry.votes.length))
-        .attr('fill', (entry, index) => colorScale(index))
         .on('click', callOnBarClickEvent)
 
-    chart.append('g')
+    const xAxisElement = chart.append('g')
         .classed('x axis', true)
         .attr('transform', `translate(0, ${chartHeight})`)
+        .attr('shape-rendering', 'crispEdges')
         .call(xAxis)
 
     const yAxisElement = chart.append('g')
         .classed('y axis', true)
         .attr('transform', 'translate(0, 0)')
+        .attr('shape-rendering', 'crispEdges')
         .call(yAxis)
 
     function getYScaleDomain() {
@@ -96,27 +97,53 @@ class BarChart extends Component {
 
 
     function updateVotedOnBars() {
+      pollEntries = that.props.pollData.entries
       const transitionDuration = 500
 
       xScale.domain(pollEntries.map(entry => entry.title))
       yScale.domain(getYScaleDomain())
 
+      let counter = 0
+
       bars
           .data(that.props.pollData.entries)
           .transition()
           .duration(transitionDuration)
-          .attr('height', (entry) => chartHeight - yScale(entry.votes.length))
-          .attr('y', entry => (yScale(entry.votes.length)))
-          .ease((frame) => {
-            that.updateChartState(fauxDOM)
+          .attr('fill', entry => colorScale(entry.originalEntryIndex))
+          .attr('height', entry => chartHeight - yScale(entry.votes.length))
+          .attr('x', entry => xScale(entry.title))
+          .attr('y', entry => yScale(entry.votes.length))
+          .ease(frame => {
+            // this is a hack so the chart gets updated every time the first entry gets updated
+            // begin of hack
+            counter++
+            if (counter >= entries.length) {
+              counter = 0
+              that.updateChartState(fauxDOM)
+            }
+            // end of hack
             return ease(frame)
           })
+          .on('end', () => {
+            // call the x and y axis elements to make the text crisp again
+            xAxisElement.call(xAxis)
+            yAxisElement.call(yAxis)
+
+            that.updateChartState(fauxDOM)
+          })
+
+      xAxisElement
+          .transition()
+          .duration(transitionDuration)
+          .ease(ease)
+          .call(xAxis)
 
       yAxisElement
           .transition()
           .duration(transitionDuration)
           .ease(ease)
           .call(yAxis)
+
 
       function ease(frame) {
         /* make these in the options when setting up the chart */
@@ -152,6 +179,7 @@ BarChart.propTypes = {
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     authorID: PropTypes.string.isRequired,
+    sortOrder: PropTypes.string.isRequired,
     entries: PropTypes.array.isRequired,
     cuid: PropTypes.string.isRequired,
     dateCreated: PropTypes.number.isRequired

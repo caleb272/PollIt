@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import { sortPollEntries, sortOptions } from '../../../../../tools/voting_tools.js'
+
 import BarChart from '../../components/BarChart/BarChart'
 import { createPollRequest } from '../../PollActions'
 
@@ -15,6 +17,7 @@ class CreatePollPage extends Component {
         title: '',
         author: '',
         authorID: '',
+        sortOrder: 'None',
         entries: [],
         cuid: '0',
         dateCreated: Date.now()
@@ -53,11 +56,12 @@ class CreatePollPage extends Component {
 
 
   addEntry(title) {
+    const entries = this.state.poll.entries
     if (this.findEntry(title) === -1 && title.length > 0) {
-      this.state.poll.entries.push(this.createEntry(title))
+      entries.push(this.createEntry(title, entries.length))
     }
+    sortPollEntries(this.state.poll)
     this.setState({ entryInput: '' })
-    this.setState({ poll: this.state.poll })
     this.state.triggerPollUpdate()
   }
 
@@ -73,11 +77,21 @@ class CreatePollPage extends Component {
   }
 
 
-  createEntry(title) {
+  createEntry(title, originalEntryIndex) {
     return {
       title,
-      votes: []
+      votes: [],
+      originalEntryIndex
     }
+  }
+
+
+  sortOrderChanged({ target: { value } }) {
+    this.state.poll.sortOrder = value
+    console.log('unsorted:', this.state.poll.entries)
+    sortPollEntries(this.state.poll)
+    console.log('sorted:', this.state.poll.entries)
+    this.state.triggerPollUpdate()
   }
 
 
@@ -126,6 +140,14 @@ class CreatePollPage extends Component {
             onChange={this.handleEntryInputChange.bind(this)}
             value={this.state.entryInput}
           />
+
+          <label htmlFor="sort-options">Sort By</label>
+          <select
+            id="sort-options"
+            onChange={this.sortOrderChanged.bind(this)}
+          >
+            {sortOptions.map(option => <option value={option} key={option}>{option}</option>)}
+          </select>
 
           <button onClick={this.addEntryButtonClicked.bind(this)}>Add Entry</button>
         </form>
