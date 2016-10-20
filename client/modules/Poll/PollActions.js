@@ -38,7 +38,6 @@ export function deletePollRequest(pollID) {
   return function dispatchedRequest(dispatch) {
     dispatch(deletePoll(pollID))
     callApi('polls', 'DELETE', { pollID })
-      .then(({ message }) => console.log(message))
       .catch(err => console.error(err))
   }
 }
