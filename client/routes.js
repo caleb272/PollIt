@@ -19,6 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./modules/Poll/pages/PollListPage/PollListPage')
   require('./modules/Poll/pages/CreatePollPage/CreatePollPage')
   require('./modules/Poll/pages/PollDetailPage/PollDetailPage')
+  require('./modules/Poll/pages/UserPollsPage/UserPollsPage')
   require('./modules/Poll/pages/404/404')
 }
 
@@ -44,13 +45,23 @@ export default (
         }}
       />
       <Route
-        path="view/:cuid"
+        path=":cuid"
         getComponent={(nextState, cb) => {
           require.ensure([], require => {
             cb(null, require('./modules/Poll/pages/PollDetailPage/PollDetailPage').default)
           })
         }}
       />
+      <Route path="user">
+        <Route
+          path=":userid"
+          getComponent={(nextState, cb) => {
+            require.ensure([], require => {
+              cb(null, require('./modules/Poll/pages/UserPollsPage/UserPollsPage').default)
+            })
+          }}
+        />
+      </Route>
     </Route>
 
     <Route

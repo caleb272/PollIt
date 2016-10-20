@@ -1,11 +1,11 @@
-import React, { PropTypes, Component } from 'react'
+import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import { getPolls } from '../../PollReducer'
 
 import ChartList from '../../components/PollList'
 
-export function PollListPage(props) {
+function PollListPage(props) {
   return (
     <div>
       <ChartList polls={props.polls} />

@@ -26,6 +26,13 @@ export function getPoll(state, cuid) {
   return sortPollEntries(state.polls.filter(poll => poll.cuid === cuid)[0])
 }
 
+
+export function getUsersPolls(state, userId) {
+  const usersPolls = state.polls.filter(poll => poll.authorID === userId)
+  return usersPolls.map(sortPollEntries)
+}
+
+
 export function getUser(state) {
   return state.user
 }

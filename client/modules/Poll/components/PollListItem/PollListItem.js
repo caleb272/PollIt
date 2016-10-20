@@ -2,11 +2,12 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import BarChart from '../BarChart/VoteableBarChart'
 
+
 function PollListItem(props) {
   return (
     <div><center>
       <h3>
-        <Link to={`/polls/view/${props.poll.cuid}`}>
+        <Link to={`/polls/${props.poll.cuid}`}>
           {props.poll.title}
         </Link>
       </h3>
