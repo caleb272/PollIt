@@ -1,7 +1,7 @@
-import { CREATE_POLL, UPDATE_POLL } from './PollActions'
+import { CREATE_POLL, UPDATE_POLL, DELETE_POLL } from './PollActions'
 import { sortPollEntries } from '../../../tools/voting_tools'
 
-const initialState = { polls: [], user: null }
+const initialState = []
 
 function PollReducer(state = initialState, action) {
   switch (action.type) {
@@ -10,6 +10,9 @@ function PollReducer(state = initialState, action) {
 
     case UPDATE_POLL:
       return state.map(currentPoll => (currentPoll.cuid === action.poll.cuid ? action.poll : currentPoll))
+
+    case DELETE_POLL:
+      return state.filter(poll => poll.cuid !== action.pollID)
 
     default:
       return state

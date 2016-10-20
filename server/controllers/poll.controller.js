@@ -70,3 +70,10 @@ export function updatePoll(req, res) {
     res.send({ updatedPoll, message })
   }
 }
+
+
+export function deletePoll(req, res) {
+  Poll.findOneAndRemove({ cuid: req.body.pollID })
+    .then(() => res.send({ message: 'success' }))
+    .catch(err => console.error(err)) // eslint-disable-line
+}

@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 
 import EditablePollListItem from '../../components/EditablePollListItem/EditablePollListItem'
 
+import { deletePollRequest } from '../../PollActions'
 import { getUser, getUsersPolls } from '../../PollReducer'
 
 function UserPollsPage(props) {
   function deletPoll({ cuid }) {
-    console.log('deleting the poll:', cuid)
+    props.dispatch(deletePollRequest(cuid))
   }
 
 
