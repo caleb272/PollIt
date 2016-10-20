@@ -72,7 +72,7 @@ export function sortPollEntries(poll) {
         return defaultToOriginalIndex(first, second, (firstVotes, secondVotes) => firstVotes < secondVotes)
 
       case ALPHABETICAL:
-        return first.title > second.title
+        return first.title.toLowerCase() > second.title.toLowerCase()
 
       case NONE:
       default:
