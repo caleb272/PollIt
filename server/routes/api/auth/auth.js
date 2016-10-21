@@ -53,4 +53,9 @@ router.use(passport.session())
 
 router.use('/auth', githubAuthRoutes(passport))
 
+router.get('/auth/logout', (req, res) => {
+  req.logOut()
+  res.redirect('/')
+})
+
 export default router

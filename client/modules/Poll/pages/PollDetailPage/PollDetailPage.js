@@ -16,6 +16,7 @@ function PollDetailPage(props) {
   )
 }
 
+
 PollDetailPage.propTypes = {
   poll: PropTypes.shape({
     title: PropTypes.string.isRequired,
@@ -26,10 +27,12 @@ PollDetailPage.propTypes = {
   })
 }
 
+
 function mapStateToProps(state, props) {
   return {
     poll: getPoll(state, props.params.cuid)
   }
 }
+
 
 export default connect(mapStateToProps)(PollDetailPage)

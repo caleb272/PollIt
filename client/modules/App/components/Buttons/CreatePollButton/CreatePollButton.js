@@ -5,7 +5,7 @@ import styles from '../Buttons.css'
 
 function CreatePollButton() {
   return (
-    <Link to="/polls/create" >
+    <Link to="/polls/create">
       <span className={`${styles['header-button']} ${styles['left-button']}`}>
         CreatePoll
       </span>

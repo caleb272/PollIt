@@ -18,7 +18,7 @@ function UserPollsPage(props) {
       <EditablePollListItem
         poll={poll}
         delete={deletPoll}
-        showDeleteButton={poll.authorID === props.user.github_id}
+        showDeleteButton={props.user && poll.authorID === props.user.github_id}
         key={poll.cuid}
       />
       )
@@ -43,10 +43,11 @@ UserPollsPage.propTypes = {
 }
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
+  const user = getUser(state) || null
   return {
-    polls: getUsersPolls(state, getUser(state).github_id),
-    user: getUser(state)
+    polls: getUsersPolls(state, props.params.userid),
+    user
   }
 }
 

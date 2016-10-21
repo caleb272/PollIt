@@ -151,7 +151,7 @@ class CreatePollPage extends Component {
 
           <button onClick={this.addEntryButtonClicked.bind(this)}>Add Entry</button>
         </form>
-        <button onClick={this.createPoll.bind(this)}>Create</button>
+        <button onClick={this.createPoll.bind(this)}>Save</button>
       </div>
     )
   }
@@ -163,5 +163,9 @@ CreatePollPage.propTypes = {
 }
 
 
-// export default connect()(CreatePollPage)
-export default connect()(CreatePollPage)
+function mapStateToProps() {
+  return {}
+}
+
+
+export default connect(mapStateToProps)(CreatePollPage)

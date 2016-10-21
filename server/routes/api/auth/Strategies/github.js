@@ -17,6 +17,8 @@ export function strategy(verifyCallback) {
 
 
 export function authRoutes(passport) {
+  router.post('/github', passport.authenticate('github', { scope: ['user:email'] }))
+
   router.get('/github', passport.authenticate('github', { scope: ['user:email'] }))
   router.get('/github/callback',
       passport.authenticate('github', { failureRedirect: '/failed' }),

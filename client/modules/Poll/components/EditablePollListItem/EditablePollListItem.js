@@ -22,7 +22,7 @@ function EditablePollListItem(props) {
 EditablePollListItem.propTypes = {
   poll: PropTypes.object.isRequired,
   delete: PropTypes.func.isRequired,
-  showDeleteButton: PropTypes.bool.isRequired
+  showDeleteButton: PropTypes.bool
 }
 
 
