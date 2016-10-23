@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
+// import { darkBaseTheme } from 'material-ui/styles/baseThemes/darkBaseTheme'
+import { deepOrange500 } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
@@ -17,7 +18,7 @@ const enableDevTools = false
 
 const muiTheme = getMuiTheme({
   palette: {
-    accent1Color: darkBaseTheme
+    accent1Color: deepOrange500
   }
 })
 

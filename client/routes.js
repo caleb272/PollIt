@@ -37,7 +37,7 @@ export default (
 
     <Route path="polls">
       <Route
-        path="create/(:cuid)"
+        path="create(/:cuid)"
         getComponent={(nextState, cb) => {
           require.ensure([], require => {
             cb(null, require('./modules/Poll/pages/CreatePollPage/CreatePollPage').default)
