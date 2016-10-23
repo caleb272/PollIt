@@ -1,8 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 // Import Style
-import styles from './App.css';
+import styles from './App.css'
 
 // Import Components
 import Helmet from 'react-helmet';
@@ -11,6 +14,12 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
 const enableDevTools = false
+
+const muiTheme = getMuiTheme({
+  palette: {
+    accent1Color: darkBaseTheme
+  }
+})
 
 export class App extends Component {
   constructor(props) {
@@ -24,32 +33,34 @@ export class App extends Component {
 
   render() {
     return (
-      <div>
-         {this.state.isMounted && !window.devToolsExtension && process.env.NODE_ENV === 'development' && <DevTools /> && enableDevTools}
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          <Helmet
-            title="MERN Starter - Blog App"
-            titleTemplate="%s - Blog App"
-            meta={[
-              { charset: 'utf-8' },
-              {
-                'http-equiv': 'X-UA-Compatible',
-                content: 'IE=edge',
-              },
-              {
-                name: 'viewport',
-                content: 'width=device-width, initial-scale=1',
-              },
-            ]}
-          />
-          <Header />
-          <div className={styles.container}>
-            {this.props.children}
+           {this.state.isMounted && !window.devToolsExtension && process.env.NODE_ENV === 'development' && <DevTools /> && enableDevTools}
+          <div>
+            <Helmet
+              title="MERN Starter - Blog App"
+              titleTemplate="%s - Blog App"
+              meta={[
+                { charset: 'utf-8' },
+                {
+                  'http-equiv': 'X-UA-Compatible',
+                  content: 'IE=edge',
+                },
+                {
+                  name: 'viewport',
+                  content: 'width=device-width, initial-scale=1',
+                },
+              ]}
+            />
+            <Header />
+            <div className={styles.container}>
+              {this.props.children}
+            </div>
+            <Footer />
           </div>
-          <Footer />
         </div>
-      </div>
-    );
+      </MuiThemeProvider>
+    )
   }
 }
 
