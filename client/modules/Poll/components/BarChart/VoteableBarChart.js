@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import BarChart from './BarChart'
 import { getUser } from '../../PollReducer'
-import { updatePollRequest } from '../../PollActions'
+import { voteOnPollRequest } from '../../PollActions'
 
 import votingTools, { sortPollEntries } from '../../../../../tools/voting_tools'
 
@@ -29,7 +29,7 @@ class VoteableBarChart extends Component {
 
     // use the data on the client side to figure out what changes on the chart
     // then once the server returns the data verify and update if necessary
-    this.props.dispatch(updatePollRequest(this.props.poll.cuid, entry.title, this.props.user.github_id))
+    this.props.dispatch(voteOnPollRequest(this.props.poll.cuid, entry.title, this.props.user.github_id))
       .then(() => {
         sortPollEntries(this.props.poll)
         updateVotedOnBars()

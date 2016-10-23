@@ -4,24 +4,27 @@ import { connect } from 'react-redux'
 import { sortPollEntries, sortOptions } from '../../../../../tools/voting_tools.js'
 
 import BarChart from '../../components/BarChart/BarChart'
-import { createPollRequest } from '../../PollActions'
+import { createPollRequest, updatePollRequest } from '../../PollActions'
+import { getPoll, getUser } from '../../PollReducer'
 
 
 class CreatePollPage extends Component {
   constructor(props) {
     super(props)
 
+    const poll = props.poll || {
+      title: '',
+      author: '',
+      authorID: '',
+      sortOrder: 'None',
+      entries: [],
+      cuid: '0',
+      dateCreated: Date.now()
+    }
+
     this.state = {
       entryInput: '',
-      poll: {
-        title: '',
-        author: '',
-        authorID: '',
-        sortOrder: 'None',
-        entries: [],
-        cuid: '0',
-        dateCreated: Date.now()
-      },
+      poll,
       triggerPollUpdate: () => {}
     }
   }
@@ -35,6 +38,7 @@ class CreatePollPage extends Component {
   handleTitleInputChange(action) {
     action.preventDefault()
     this.state.poll.title = action.target.value
+    this.setState({ poll: this.state.poll })
   }
 
 
@@ -88,9 +92,7 @@ class CreatePollPage extends Component {
 
   sortOrderChanged({ target: { value } }) {
     this.state.poll.sortOrder = value
-    console.log('unsorted:', this.state.poll.entries)
     sortPollEntries(this.state.poll)
-    console.log('sorted:', this.state.poll.entries)
     this.state.triggerPollUpdate()
   }
 
@@ -98,7 +100,8 @@ class CreatePollPage extends Component {
   createPoll() {
     const poll = this.state.poll
     if (poll.title && poll.entries.length > 1) {
-      this.props.dispatch(createPollRequest(poll))
+      this.props.dispatch(this.props.editToggled ?
+          updatePollRequest(poll) : createPollRequest(poll))
     } else {
       this.alertIncompletePoll(poll)
     }
@@ -124,6 +127,7 @@ class CreatePollPage extends Component {
             type="text"
             autoComplete="off"
             onChange={this.handleTitleInputChange.bind(this)}
+            value={this.state.poll.title}
           />
         </form>
 
@@ -145,6 +149,7 @@ class CreatePollPage extends Component {
           <select
             id="sort-options"
             onChange={this.sortOrderChanged.bind(this)}
+            value={this.state.poll.sortOrder}
           >
             {sortOptions.map(option => <option value={option} key={option}>{option}</option>)}
           </select>
@@ -159,12 +164,20 @@ class CreatePollPage extends Component {
 
 
 CreatePollPage.propTypes = {
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  editToggled: PropTypes.bool.isRequired,
+  poll: PropTypes.object
 }
 
 
-function mapStateToProps() {
-  return {}
+function mapStateToProps(state, props) {
+  const user = getUser(state) || {}
+  let poll = getPoll(state, props.params.cuid) || {}
+  poll = user.github_id === poll.authorID ? poll : null
+  return {
+    editToggled: !!poll,
+    poll
+  }
 }
 
 

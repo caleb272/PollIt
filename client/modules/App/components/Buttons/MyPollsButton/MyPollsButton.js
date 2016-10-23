@@ -5,7 +5,7 @@ import styles from '../Buttons.css'
 
 function MyPollsButton(props) {
   return (
-    <Link to="/polls/user/5751333">
+    <Link to={`/polls/user/${props.userID}`}>
       <span className={`${styles['header-button']}`}>
         My Polls
       </span>

@@ -46,6 +46,22 @@ function createPollInDB(poll) {
 
 
 export function updatePoll(req, res) {
+  if (!req.user || !req.body || req.user.github_id !== req.body.authorID) {
+    send(null, 'not logged in or user didnt match poll author')
+    return
+  }
+
+  Poll.findOneAndUpdate({ cuid: req.body.cuid }, req.body)
+    .then(updatedPoll => send(updatedPoll, 'success'))
+    .catch(err => console.err(err)) // eslint-disable-line
+
+  function send(updatedPoll, message) {
+    res.send({ updatedPoll, message })
+  }
+}
+
+
+export function voteOnPoll(req, res) {
   if (!voterID && !req.user) {
     send(null, 'no voter id')
     return
@@ -60,14 +76,14 @@ export function updatePoll(req, res) {
       votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
       poll.markModified('entries')
       return poll.save()
-        .then(updatedPoll => send(updatedPoll, 'updated poll'))
+        .then(votedOnPoll => send(votedOnPoll, 'voted on poll'))
     })
     .catch(err => console.error(err)) // eslint-disable-line
 
     // console.log('your is authenticated:', req.isAuthenticated())
     // console.log('yoru ip address:', req.connection.remoteAddress)
-  function send(updatedPoll, message) {
-    res.send({ updatedPoll, message })
+  function send(votedOnPoll, message) {
+    res.send({ votedOnPoll, message })
   }
 }
 

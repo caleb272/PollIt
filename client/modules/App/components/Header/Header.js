@@ -27,7 +27,7 @@ export function Header(props, context) {
           :
           <div>
             <LogoutButton />
-            <MyPollsButton />
+            <MyPollsButton userID={props.user.github_id} />
             <CreatePollButton />
           </div>
         }

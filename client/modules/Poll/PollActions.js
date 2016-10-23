@@ -19,12 +19,26 @@ export function createPollRequest(poll) {
 }
 
 
-export function updatePollRequest(cuid, entryTitle, voterID) {
-  return function dispatchedRequest(dispatch) {
-    return callApi('polls', 'PUT', { cuid, entryTitle, voterID })
+export function updatePollRequest(poll) {
+  return function dispatchRequest(dispatch) {
+    return callApi('polls', 'PUT', poll)
       .then(({ updatedPoll }) => {
         if (updatedPoll) {
-          dispatch(updatePoll(updatedPoll))
+          dispatch(updatePoll(poll))
+        } else {
+          dispatch(noChange)
+        }
+      })
+  }
+}
+
+
+export function voteOnPollRequest(cuid, entryTitle, voterID) {
+  return function dispatchedRequest(dispatch) {
+    return callApi('polls/vote', 'PATCH', { cuid, entryTitle, voterID })
+      .then(({ votedOnPoll }) => {
+        if (votedOnPoll) {
+          dispatch(updatePoll(votedOnPoll))
         } else {
           dispatch(noChange())
         }

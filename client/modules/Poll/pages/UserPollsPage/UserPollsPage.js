@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 
 import EditablePollListItem from '../../components/EditablePollListItem/EditablePollListItem'
@@ -12,13 +13,19 @@ function UserPollsPage(props) {
   }
 
 
+  function editPoll({ cuid }) {
+    browserHistory.push(`/polls/create/${cuid}`)
+  }
+
+
   function pollList() {
     return props.polls.map(poll =>
       (
       <EditablePollListItem
         poll={poll}
         delete={deletPoll}
-        showDeleteButton={props.user && poll.authorID === props.user.github_id}
+        edit={editPoll}
+        showModifyButtons={props.user && poll.authorID === props.user.github_id}
         key={poll.cuid}
       />
       )

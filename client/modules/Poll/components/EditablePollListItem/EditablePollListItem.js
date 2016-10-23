@@ -8,10 +8,18 @@ function EditablePollListItem(props) {
   }
 
 
+  function editPoll() {
+    props.edit(props.poll)
+  }
+
+
   return (
     <div>
-      {props.showDeleteButton ?
+      {props.showModifyButtons ?
         <button onClick={deletePoll}>Delete Poll</button>
+        : null}
+      {props.showModifyButtons ?
+        <button onClick={editPoll}>Edit Poll</button>
         : null}
       <PollListItem poll={props.poll} />
     </div>
@@ -22,7 +30,8 @@ function EditablePollListItem(props) {
 EditablePollListItem.propTypes = {
   poll: PropTypes.object.isRequired,
   delete: PropTypes.func.isRequired,
-  showDeleteButton: PropTypes.bool
+  edit: PropTypes.func.isRequired,
+  showModifyButtons: PropTypes.bool.isRequired
 }
 
 
