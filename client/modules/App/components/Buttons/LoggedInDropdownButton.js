@@ -12,7 +12,6 @@ function LoggedInDropdownButton(props) {
 
 
   function user() {
-    console.log(props.userID)
     redirect(`/polls/user/${props.userID}`)
   }
 
