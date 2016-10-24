@@ -88,8 +88,8 @@ const renderFullPage = (html, initialState) => {
         ${head.script.toString()}
 
         ${process.env.NODE_ENV === 'production' ? `<link rel='stylesheet' href='${assetsManifest['/app.css']}' />` : ''}
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
         <link rel="shortcut icon" href='${process.env.NODE_ENV === 'production' ? assetsManifest['/poll-symbol.png'] : pollSymbol}' />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
       </head>
       <body>
         <div id="root">${html}</div>

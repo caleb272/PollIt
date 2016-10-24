@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { TextField, SelectField, MenuItem, RaisedButton } from 'material-ui'
 
 import { sortPollEntries, sortOptions } from '../../../../../tools/voting_tools.js'
 
 import BarChart from '../../components/BarChart/BarChart'
 import { createPollRequest, updatePollRequest } from '../../PollActions'
 import { getPoll, getUser } from '../../PollReducer'
-
 
 class CreatePollPage extends Component {
   constructor(props) {
@@ -60,10 +60,13 @@ class CreatePollPage extends Component {
 
 
   addEntry(title) {
-    const entries = this.state.poll.entries
+    let entries = this.state.poll.entries
     if (this.findEntry(title) === -1 && title.length > 0) {
       entries.push(this.createEntry(title, entries.length))
+    } else {
+      entries = this.deleteEntry(entries, title)
     }
+    this.state.poll.entries = entries
     sortPollEntries(this.state.poll)
     this.setState({ entryInput: '' })
     this.state.triggerPollUpdate()
@@ -81,6 +84,19 @@ class CreatePollPage extends Component {
   }
 
 
+  deleteEntry(entries, title) {
+    const newEntries = entries.filter(current => current.title !== title)
+      .sort((current, next) => current.originalEntryIndex > next.originalEntryIndex)
+
+    // set the originalEntryIndexes to the right number
+    for (let i = 0; i < newEntries.length; i++) {
+      newEntries[i].originalEntryIndex = i
+    }
+
+    return newEntries
+  }
+
+
   createEntry(title, originalEntryIndex) {
     return {
       title,
@@ -90,7 +106,7 @@ class CreatePollPage extends Component {
   }
 
 
-  sortOrderChanged({ target: { value } }) {
+  sortOrderChanged(event, index, value) {
     this.state.poll.sortOrder = value
     sortPollEntries(this.state.poll)
     this.state.triggerPollUpdate()
@@ -116,47 +132,52 @@ class CreatePollPage extends Component {
     }
   }
 
-
   render() {
     return (
       <div>
-        <form onSubmit={action => action.preventDefault()}>
-          <label htmlFor="title-input">Title</label>
-          <input
-            id="title-input"
-            type="text"
-            autoComplete="off"
-            onChange={this.handleTitleInputChange.bind(this)}
-            value={this.state.poll.title}
-          />
-        </form>
+        <TextField
+          floatingLabelText="Poll Title"
+          fullWidth={true}
+          onChange={this.handleTitleInputChange.bind(this)}
+          value={this.state.poll.title}
+        />
 
         <div>
           <BarChart pollData={this.state.poll} setTriggerUpdate={this.setTriggerPollUpdate.bind(this)} />
         </div>
 
         <form onSubmit={action => action.preventDefault()}>
-          <label htmlFor="add-entry">Entry Name</label>
-          <input
-            id="add-entry"
-            type="text"
-            onKeyDown={this.handleEntryInputKeyDown.bind(this)}
+          <TextField
+            floatingLabelText="Entry Name"
             onChange={this.handleEntryInputChange.bind(this)}
+            onKeyDown={this.handleEntryInputKeyDown.bind(this)}
             value={this.state.entryInput}
+            fullWidth={true}
+          />
+          <RaisedButton
+            label="Add/Remove Entry"
+            primary={true}
+            fullWidth={true}
+            onClick={this.addEntryButtonClicked.bind(this)}
           />
 
-          <label htmlFor="sort-options">Sort By</label>
-          <select
-            id="sort-options"
-            onChange={this.sortOrderChanged.bind(this)}
+          <SelectField
+            floatingLabelText="Sort by"
             value={this.state.poll.sortOrder}
+            onChange={this.sortOrderChanged.bind(this)}
+            autoWidth={false}
+            fullWidth={true}
           >
-            {sortOptions.map(option => <option value={option} key={option}>{option}</option>)}
-          </select>
+            {sortOptions.map(option => <MenuItem value={option} key={option} primaryText={option} />)}
+          </SelectField>
 
-          <button onClick={this.addEntryButtonClicked.bind(this)}>Add Entry</button>
+          <RaisedButton
+            label="Save"
+            primary={true}
+            fullWidth={true}
+            onClick={this.createPoll.bind(this)}
+          />
         </form>
-        <button onClick={this.createPoll.bind(this)}>Save</button>
       </div>
     )
   }

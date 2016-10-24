@@ -5,6 +5,13 @@ import IconMenu from 'material-ui/IconMenu'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import MenuItem from 'material-ui/MenuItem'
 
+const styles = {
+  dropdownMenu: {
+    width: '200px',
+    anchor: 'center'
+  }
+}
+
 function LoggedInDropdownButton(props) {
   function logout() {
     window.location.href = '/auth/logout'
@@ -25,8 +32,10 @@ function LoggedInDropdownButton(props) {
       iconButtonElement={
         <IconButton><MoreVertIcon /></IconButton>
       }
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+      autoCloseWhenOffScreen="true"
+      menuStyle={styles.dropdownMenu}
     >
       <MenuItem primaryText="Create Poll" onClick={() => redirect('/polls/create')} />
       <MenuItem primaryText="My Polls" onClick={user} />

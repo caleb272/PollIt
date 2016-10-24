@@ -44,7 +44,7 @@ class BarChart extends Component {
     const chart = d3.select(fauxDOM).append('svg')
         .attr('width', (chartWidth + padding.left + padding.right))
         .attr('height', (chartHeight + padding.top + padding.bottom))
-        .style('background-color', 'lightblue')
+        .style('background-color', 'white')
       .append('g')
         .classed('inner-chart', true)
         .attr('transform', `translate(${padding.left}, ${padding.top})`)

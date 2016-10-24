@@ -33,20 +33,6 @@ function PollListItem(props) {
   )
 }
 
-// title={props.poll.title}
-// subtitle={`Created by ${props.poll.author}`}
-
-/*
-<div><center>
-  <h3>
-    <Link to={`/polls/${props.poll.cuid}`}>
-      {props.poll.title}
-    </Link>
-  </h3>
-  <BarChart poll={props.poll} />
-</center></div>
-*/
-
 PollListItem.propTypes = {
   poll: PropTypes.shape({
     title: PropTypes.string.isRequired,
