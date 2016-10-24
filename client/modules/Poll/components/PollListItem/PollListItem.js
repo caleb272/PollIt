@@ -1,20 +1,51 @@
 import React, { PropTypes } from 'react'
+import { Card, CardHeader, CardMedia } from 'material-ui/Card'
 import { Link } from 'react-router'
 import BarChart from '../BarChart/VoteableBarChart'
 
+import styles from './PollListItem.css'
 
 function PollListItem(props) {
+  function subtitle() {
+    return (
+      <span>
+        Created by
+        <Link>{props.poll.author}</Link>
+      </span>
+    )
+  }
+
+
   return (
-    <div><center>
-      <h3>
-        <Link to={`/polls/${props.poll.cuid}`}>
-          {props.poll.title}
-        </Link>
-      </h3>
-      <BarChart poll={props.poll} />
-    </center></div>
+    <div className={styles['page-padding']}>
+      <Card expandable={null}>
+        <CardHeader
+          title={props.poll.title}
+          subtitle={subtitle()}
+        />
+        <CardMedia>
+          <center>
+            <BarChart poll={props.poll} />
+          </center>
+        </CardMedia>
+      </Card>
+    </div>
   )
 }
+
+// title={props.poll.title}
+// subtitle={`Created by ${props.poll.author}`}
+
+/*
+<div><center>
+  <h3>
+    <Link to={`/polls/${props.poll.cuid}`}>
+      {props.poll.title}
+    </Link>
+  </h3>
+  <BarChart poll={props.poll} />
+</center></div>
+*/
 
 PollListItem.propTypes = {
   poll: PropTypes.shape({
