@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { TextField, SelectField, MenuItem, RaisedButton } from 'material-ui'
+import { TextField, SelectField, MenuItem, RaisedButton, Dialog } from 'material-ui'
 
 import { sortPollEntries, sortOptions } from '../../../../../tools/voting_tools.js'
 
 import BarChart from '../../components/BarChart/BarChart'
+import IncompletePollDialog from '../../components/IncompletePollDialog/IncompletePollDialog'
 import { createPollRequest, updatePollRequest } from '../../PollActions'
 import { getPoll, getUser } from '../../PollReducer'
 
@@ -24,6 +25,7 @@ class CreatePollPage extends Component {
 
     this.state = {
       entryInput: '',
+      dialog: null,
       poll,
       triggerPollUpdate: () => {}
     }
@@ -125,10 +127,11 @@ class CreatePollPage extends Component {
 
 
   alertIncompletePoll(poll) {
+    const openDialog = (message) => this.setState({ dialog: message })
     if (!poll.title) {
-      alert('no title')
+      openDialog('no title')
     } else {
-      alert('you need atleast two entries')
+      openDialog('you need atleast two entries')
     }
   }
 
@@ -178,6 +181,14 @@ class CreatePollPage extends Component {
             onClick={this.createPoll.bind(this)}
           />
         </form>
+
+
+        <div>
+          <IncompletePollDialog
+            dialog={this.state.dialog ? this.state.dialog : ''}
+            close={() => this.setState({ dialog: null })}
+          />
+        </div>
       </div>
     )
   }
