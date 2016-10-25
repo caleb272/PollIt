@@ -42,15 +42,13 @@ class BarChart extends Component {
     const yAxis = d3.axisLeft(yScale)
 
     let chart = d3.select(fauxDOM).append('svg')
-        .attr('width', ('100%'))
-        .attr('height', 600)
-        // .attr('width', (chartWidth + padding.left + padding.right))
-        // .attr('height', (chartHeight + padding.top + padding.bottom))
+        .attr('width', (chartWidth + padding.left + padding.right))
+        .attr('height', (chartHeight + padding.top + padding.bottom))
         .style('background-color', 'purple')
 
-    console.log('computed styles:', fauxDOM.getComputedStyle(chart))
-    console.log('xyz:', fauxDOM)
-    console.log('fuck width:', d3.select(fauxDOM).node().getBoundingClientRect().width)
+    // console.log('computed styles:', fauxDOM.getComputedStyle(chart))
+    // console.log('xyz:', fauxDOM)
+    // console.log('fuck width:', d3.select(fauxDOM).node().getBoundingClientRect().width)
 
 
     chart = chart.append('g')
