@@ -7,7 +7,7 @@ class BarChart extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      chart: null
+      chart: '...loading'
     }
   }
 
@@ -44,11 +44,11 @@ class BarChart extends Component {
     let chart = d3.select(fauxDOM).append('svg')
         .attr('width', (chartWidth + padding.left + padding.right))
         .attr('height', (chartHeight + padding.top + padding.bottom))
-        .style('background-color', 'purple')
+        .style('background-color', 'white')
 
-    // console.log('computed styles:', fauxDOM.getComputedStyle(chart))
-    // console.log('xyz:', fauxDOM)
-    // console.log('fuck width:', d3.select(fauxDOM).node().getBoundingClientRect().width)
+    fauxDOM.appendChild(ReactFauxDOM.createElement('div'))
+    console.log(new ReactFauxDOM.Element('div').getBoundingClientRect())
+    return
 
 
     chart = chart.append('g')
