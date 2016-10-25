@@ -41,15 +41,24 @@ class BarChart extends Component {
     const xAxis = d3.axisBottom(xScale)
     const yAxis = d3.axisLeft(yScale)
 
-    const chart = d3.select(fauxDOM).append('svg')
-        .attr('width', (chartWidth + padding.left + padding.right))
-        .attr('height', (chartHeight + padding.top + padding.bottom))
-        .style('background-color', 'white')
-      .append('g')
+    let chart = d3.select(fauxDOM).append('svg')
+        .attr('width', ('100%'))
+        .attr('height', 600)
+        // .attr('width', (chartWidth + padding.left + padding.right))
+        // .attr('height', (chartHeight + padding.top + padding.bottom))
+        .style('background-color', 'purple')
+
+    console.log('computed styles:', fauxDOM.getComputedStyle(chart))
+    console.log('xyz:', fauxDOM)
+    console.log('fuck width:', d3.select(fauxDOM).node().getBoundingClientRect().width)
+
+
+    chart = chart.append('g')
         .classed('inner-chart', true)
         .attr('transform', `translate(${padding.left}, ${padding.top})`)
         .attr('width', chartWidth)
         .attr('height', chartHeight)
+
 
     const bars = chart.selectAll('rect')
         .data(pollEntries).enter()
@@ -115,7 +124,7 @@ class BarChart extends Component {
           .attr('y', entry => yScale(entry.votes.length))
           .ease(frame => {
             // this is a hack so the chart gets updated every time the first entry gets updated
-            // begin of hack
+            // beginning of hack
             counter++
             if (counter >= entries.length) {
               counter = 0
