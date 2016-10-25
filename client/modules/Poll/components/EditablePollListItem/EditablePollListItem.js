@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-
+import { CardActions, FlatButton } from 'material-ui'
 import PollListItem from '../PollListItem/PollListItem'
 
 function EditablePollListItem(props) {
@@ -12,17 +12,26 @@ function EditablePollListItem(props) {
     props.edit(props.poll)
   }
 
+  const actions = (
+    <CardActions>
+      <FlatButton
+        label="Edit"
+        primary={true}
+        onClick={editPoll}
+      />
+      <FlatButton
+        label="Delete"
+        secondary={true}
+        onClick={deletePoll}
+      />
+    </CardActions>
+  )
 
   return (
-    <div>
-      {props.showModifyButtons ?
-        <button onClick={deletePoll}>Delete Poll</button>
-        : null}
-      {props.showModifyButtons ?
-        <button onClick={editPoll}>Edit Poll</button>
-        : null}
-      <PollListItem poll={props.poll} />
-    </div>
+    <PollListItem
+      poll={props.poll}
+      innerElements={props.showModifyButtons ? actions : null}
+    />
   )
 }
 

@@ -34,7 +34,7 @@ function LoggedInDropdownButton(props) {
       }
       anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-      autoCloseWhenOffScreen="true"
+      autoCloseWhenOffScreen={true}
       menuStyle={styles.dropdownMenu}
     >
       <MenuItem primaryText="Create Poll" onClick={() => redirect('/polls/create')} />
