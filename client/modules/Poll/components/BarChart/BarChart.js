@@ -34,7 +34,7 @@ const BarChart = React.createClass({
   buildChart({ entries }) {
     let containingDivWidth = window.getComputedStyle(this.refs.chart, null).getPropertyValue('width')
     containingDivWidth = Number(containingDivWidth.replace(/[a-z]*/gi, ''))
-    const height = (containingDivWidth / 4) * 3
+    const height = (containingDivWidth / 16) * 10
 
     let pollEntries = entries
     const that = this
@@ -63,7 +63,7 @@ const BarChart = React.createClass({
     let chart = d3.select(fauxDOM).append('svg')
         .attr('width', (chartWidth + padding.left + padding.right))
         .attr('height', (chartHeight + padding.top + padding.bottom))
-        .style('background-color', 'blue')
+        .style('background-color', 'white')
 
     chart = chart.append('g')
         .classed('inner-chart', true)

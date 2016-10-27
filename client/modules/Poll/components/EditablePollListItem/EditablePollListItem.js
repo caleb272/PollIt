@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { CardActions, FlatButton } from 'material-ui'
 import PollListItem from '../PollListItem/PollListItem'
+import ShareButtons from '../ShareButtons/ShareButtons'
 
 function EditablePollListItem(props) {
   function deletePoll() {
@@ -14,6 +15,7 @@ function EditablePollListItem(props) {
 
   const actions = (
     <CardActions>
+      <ShareButtons poll={props.poll} />
       <FlatButton
         label="Edit"
         primary={true}

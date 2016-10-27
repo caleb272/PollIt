@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
 import PollListItem from './PollListItem/PollListItem'
+import ShareButtons from './ShareButtons/ShareButtons'
+import { CardActions } from 'material-ui/Card'
 
 function PollList(props) {
   return (
@@ -8,6 +10,7 @@ function PollList(props) {
         <PollListItem
           poll={poll}
           key={poll.cuid}
+          innerElements={<CardActions><ShareButtons poll={poll} /></CardActions>}
         />
       ))}
     </div>

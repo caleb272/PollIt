@@ -8,8 +8,7 @@ import styles from './PollListItem.css'
 function PollListItem(props) {
   const subtitle = (
     <span>
-      Created by
-      <Link>{props.poll.author}</Link>
+      Created by <Link href={`/polls/user/${props.poll.author}`}>{props.poll.author}</Link>
     </span>
   )
 
@@ -39,7 +38,7 @@ PollListItem.propTypes = {
     dateCreated: PropTypes.number.isRequired,
     cuid: PropTypes.string.isRequired
   }),
-  innerElements: PropTypes.object
+  innerElements: PropTypes.object,
 }
 
 export default PollListItem
