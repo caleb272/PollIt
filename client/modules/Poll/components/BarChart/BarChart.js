@@ -1,29 +1,48 @@
-import React, { PropTypes, Component } from 'react'
+import React, { PropTypes } from 'react'
 import * as d3 from 'd3'
 import ReactFauxDOM from 'react-faux-dom'
 import { connect } from 'react-redux'
 
-class BarChart extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
+const BarChart = React.createClass({
+  mixins: [
+    ReactFauxDOM.mixins.core,
+    ReactFauxDOM.mixins.anim
+  ],
+
+  getInitialState() {
+    return {
       chart: '...loading'
     }
-  }
+  },
 
 
   componentDidMount() {
-    this.buildChart(this.props.pollData)
-  }
-
+    setTimeout(() => {
+      console.log(window.getComputedStyle(this.refs.chart, null).getPropertyValue('width'))
+      this.buildChart(this.props.pollData)
+    }, 100)
+    // // console.log(this.refs.svg.getDOMNode().offsetWidth)
+    // const x = ReactFauxDOM.createElement('div')
+    // x.textContent = 'fuck'
+    // this.setState({ chart: x.toReact() })
+    // // this.buildChart(this.props.pollData)
+    // this.refs.rootView.measure((ox, oy, width, height) => {
+    //   this.setState({ rootViewHeight: height })
+    // })
+  },
 
   buildChart({ entries }) {
+    let containingDivWidth = window.getComputedStyle(this.refs.chart, null).getPropertyValue('width')
+    containingDivWidth = Number(containingDivWidth.replace(/[a-z]*/gi, ''))
+    const height = (containingDivWidth / 4) * 3
+
     let pollEntries = entries
     const that = this
     const fauxDOM = ReactFauxDOM.createElement('div')
+    // const fauxDOM = this.connectFauxDOM('div.renderedD3', 'chart')
     const padding = { left: 30, top: 10, right: 10, bottom: 20 }
-    const chartWidth = (600 - (padding.left + padding.right))
-    const chartHeight = (400 - (padding.top + padding.bottom))
+    const chartWidth = (containingDivWidth - (padding.left + padding.right))
+    const chartHeight = (height - (padding.top + padding.bottom))
 
     const xScale = d3.scaleBand()
         .rangeRound([0, chartWidth])
@@ -44,12 +63,7 @@ class BarChart extends Component {
     let chart = d3.select(fauxDOM).append('svg')
         .attr('width', (chartWidth + padding.left + padding.right))
         .attr('height', (chartHeight + padding.top + padding.bottom))
-        .style('background-color', 'white')
-
-    fauxDOM.appendChild(ReactFauxDOM.createElement('div'))
-    console.log(new ReactFauxDOM.Element('div').getBoundingClientRect())
-    return
-
+        .style('background-color', 'blue')
 
     chart = chart.append('g')
         .classed('inner-chart', true)
@@ -167,18 +181,22 @@ class BarChart extends Component {
         this.buildChart(this.props.pollData)
       })
     }
-  }
+  },
 
 
   updateChartState(fauxDOM) {
     this.setState({ chart: fauxDOM.toReact() })
-  }
+  },
 
 
   render() {
-    return <div>{this.state.chart}</div>
+    return (
+      <div className="renderedD3" id="renderedD3" style={{ width: '100%' }} ref="chart">
+        {this.state.chart}
+      </div>
+    )
   }
-}
+})
 
 
 BarChart.propTypes = {
