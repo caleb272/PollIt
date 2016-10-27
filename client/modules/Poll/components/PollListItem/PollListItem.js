@@ -8,7 +8,7 @@ import styles from './PollListItem.css'
 function PollListItem(props) {
   const subtitle = (
     <span>
-      Created by <Link href={`/polls/user/${props.poll.author}`}>{props.poll.author}</Link>
+      Created by <Link href={`/polls/user/${props.poll.authorID}`}>{props.poll.author}</Link>
     </span>
   )
 
@@ -34,6 +34,7 @@ PollListItem.propTypes = {
   poll: PropTypes.shape({
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
+    authorID: PropTypes.string.isRequired,
     entries: PropTypes.array.isRequired,
     dateCreated: PropTypes.number.isRequired,
     cuid: PropTypes.string.isRequired

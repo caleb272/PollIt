@@ -12,14 +12,20 @@ function verifyCallback(accessToken, refreshToken, profile, done) {
   process.nextTick(() => {
     UserModel.findOne({ github_id: profile.id }, (err, user) => {
       if (!user) {
-        new UserModel({
-          username: profile.displayName,
-          [`${profile.provider}_id`]: profile.id
-        }).save(done)
+        createNewUser(profile)
+          .save(done)
       } else {
         done(err, user)
       }
     })
+  })
+}
+
+
+function createNewUser(profile) {
+  return new UserModel({
+    username: profile.displayName,
+    [`${profile.provider}_id`]: profile.id
   })
 }
 
