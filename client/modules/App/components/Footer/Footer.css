@@ -11,7 +11,18 @@
 }
 
 .footer a{
-  color: #FFF;
+  color: #00BCD4;
   text-decoration: none;
   font-weight: 700;
+}
+
+.footer .contact-icons {
+  color: #00BCD4;
+  padding-right: 100px;
+  position: absolute;
+  right: 0px;
+}
+
+.heart {
+  color: #FF80AB;
 }
