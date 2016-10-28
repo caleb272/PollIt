@@ -26,7 +26,7 @@ function ShareButtons(props) {
   return (
     <div>
       <span>
-        Share On:
+        Share
       </span>
       <span>
         <FlatButton

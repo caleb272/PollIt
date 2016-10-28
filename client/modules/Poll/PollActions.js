@@ -33,9 +33,9 @@ export function updatePollRequest(poll) {
 }
 
 
-export function voteOnPollRequest(cuid, entryTitle, voterID) {
+export function voteOnPollRequest(cuid, entryTitle) {
   return function dispatchedRequest(dispatch) {
-    return callApi('polls/vote', 'PATCH', { cuid, entryTitle, voterID })
+    return callApi('polls/vote', 'PATCH', { cuid, entryTitle })
       .then(({ votedOnPoll }) => {
         if (votedOnPoll) {
           dispatch(updatePoll(votedOnPoll))

@@ -62,12 +62,8 @@ export function updatePoll(req, res) {
 
 
 export function voteOnPoll(req, res) {
-  if (!voterID && !req.user) {
-    send(null, 'no voter id')
-    return
-  }
-
-  const voterID = req.body.voterID || req.user.github_id
+  const voterID = (req.user ? req.user.github_id : null) ||
+      req.connection.remoteAddress
   const entryTitle = req.body.entryTitle
   const query = { cuid: req.body.cuid }
 
@@ -80,8 +76,7 @@ export function voteOnPoll(req, res) {
     })
     .catch(err => console.error(err)) // eslint-disable-line
 
-    // console.log('your is authenticated:', req.isAuthenticated())
-    // console.log('yoru ip address:', req.connection.remoteAddress)
+
   function send(votedOnPoll, message) {
     res.send({ votedOnPoll, message })
   }

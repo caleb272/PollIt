@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override'
 import path from 'path';
-import IntlWrapper from '../client/modules/Intl/IntlWrapper';
 
 // Webpack Requirements
 import webpack from 'webpack'
@@ -75,8 +74,7 @@ const renderFullPage = (html, initialState) => {
   const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets);
   const chunkManifest = process.env.webpackChunkAssets && JSON.parse(process.env.webpackChunkAssets);
 
-  // the old favicon
-  // <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
+
   return `
     <!doctype html>
     <html>
