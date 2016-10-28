@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 import { TextField, SelectField, MenuItem, RaisedButton, Dialog } from 'material-ui'
 
 import { sortPollEntries, sortOptions } from '../../../../../tools/voting_tools.js'
@@ -120,6 +121,7 @@ class CreatePollPage extends Component {
     if (poll.title && poll.entries.length > 1) {
       this.props.dispatch(this.props.editToggled ?
           updatePollRequest(poll) : createPollRequest(poll))
+      browserHistory.push('/')
     } else {
       this.alertIncompletePoll(poll)
     }

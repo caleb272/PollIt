@@ -21,7 +21,8 @@ function PollReducer(state = initialState, action) {
 
 
 export function getPolls(state) {
-  return state.polls.map(sortPollEntries)
+  const polls = state.polls.map(sortPollEntries)
+  return sortPollsNewestToOldest(polls)
 }
 
 
@@ -31,8 +32,9 @@ export function getPoll(state, cuid) {
 
 
 export function getUsersPolls(state, userId) {
-  const usersPolls = state.polls.filter(poll => poll.authorID === userId)
-  return usersPolls.map(sortPollEntries)
+  let usersPolls = state.polls.filter(poll => poll.authorID === userId)
+  usersPolls = usersPolls.map(sortPollEntries)
+  return sortPollsNewestToOldest(usersPolls)
 }
 
 
@@ -40,8 +42,15 @@ export function getUser(state) {
   return state.user.userProfile
 }
 
+
 export function getClientIP(state) {
   return state.user.clientIP
 }
+
+
+function sortPollsNewestToOldest(polls) {
+  return polls.sort((poll1, poll2) => poll1.dateCreated < poll2.dateCreated)
+}
+
 
 export default PollReducer
