@@ -26,9 +26,7 @@ function ShareButtons(props) {
   return (
     <div>
       <span>
-        Share
-      </span>
-      <span>
+        Share:
         <FlatButton
           label="Facebook"
           onClick={() => shareOn(facebook)}

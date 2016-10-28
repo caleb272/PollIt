@@ -75,6 +75,7 @@ const renderFullPage = (html, initialState) => {
   const chunkManifest = process.env.webpackChunkAssets && JSON.parse(process.env.webpackChunkAssets);
 
 
+  // <link rel="shortcut icon" href='${process.env.NODE_ENV === 'production' ? assetsManifest['/poll-symbol.png'] : pollSymbol}' />
   return `
     <!doctype html>
     <html>
@@ -86,7 +87,7 @@ const renderFullPage = (html, initialState) => {
         ${head.script.toString()}
 
         ${process.env.NODE_ENV === 'production' ? `<link rel='stylesheet' href='${assetsManifest['/app.css']}' />` : ''}
-        <link rel="shortcut icon" href='${process.env.NODE_ENV === 'production' ? assetsManifest['/poll-symbol.png'] : pollSymbol}' />
+        <link rel="shortcut icon" href='${pollSymbol}' />
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
       </head>
       <body>
