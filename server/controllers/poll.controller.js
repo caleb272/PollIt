@@ -67,6 +67,7 @@ export function voteOnPoll(req, res) {
   const entryTitle = req.body.entryTitle
   const query = { cuid: req.body.cuid }
 
+
   Poll.findOne(query)
     .then((poll) => {
       votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)

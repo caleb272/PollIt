@@ -25,7 +25,7 @@ function UserPollsPage(props) {
         poll={poll}
         delete={deletPoll}
         edit={editPoll}
-        showModifyButtons={props.user && poll.authorID === props.user.github_id}
+        showModifyButtons={Boolean(props.user && poll.authorID === props.user.github_id)}
         key={poll.cuid}
       />
       )

@@ -131,7 +131,13 @@ app.use((req, res, next) => {
 
     /* THIS IS TEMP TILL I SETUP THE NEED STUFF */
     require('./models/poll').default.find({})
-      .then(polls => sendAppToClient({ polls, user: req.user }))
+      .then(polls => sendAppToClient({
+        polls,
+        user: {
+          userProfile: req.user,
+          clientIP: req.connection.remoteAddress
+        },
+      }))
       .catch(err => console.error(err))
 
     /* this works but it doesnt do server side rendering */

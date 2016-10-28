@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 
 import BarChart from './BarChart'
-import { getUser } from '../../PollReducer'
+import { getUser, getClientIP } from '../../PollReducer'
 import { voteOnPollRequest } from '../../PollActions'
 
 import votingTools, { sortPollEntries } from '../../../../../tools/voting_tools'
@@ -23,16 +23,22 @@ class VoteableBarChart extends Component {
 
 
   barClickedEvent(entry, updateVotedOnBars) {
-    // votingTools.voteOnPollEntries(this.props.user.github_id, entry.title, this.props.poll.entries)
-    // sortPollEntries(this.props.poll)
-    // updateVotedOnBars()
+    const voterID = this.props.user ? this.props.user.github_id : this.props.clientIP
+    votingTools.voteOnPollEntries(voterID, entry.title, this.props.poll.entries)
+    sortPollEntries(this.props.poll)
+    updateVotedOnBars()
 
     // use the data on the client side to figure out what changes on the chart
     // then once the server returns the data verify and update if necessary
     this.props.dispatch(voteOnPollRequest(this.props.poll.cuid, entry.title))
       .then(() => {
-        sortPollEntries(this.props.poll)
-        updateVotedOnBars()
+        /*
+          you could update the users end with the response from the server
+          but its not realy necessary
+        */
+
+        // sortPollEntries(this.props.poll)
+        // updateVotedOnBars()
       })
   }
 
@@ -65,13 +71,15 @@ VoteableBarChart.propTypes = {
     username: PropTypes.string.isRequired,
     github_id: PropTypes.string.isRequired
   }),
+  clientIP: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired
 }
 
 
 function mapStateToProps(state) {
   return {
-    user: getUser(state)
+    user: getUser(state),
+    clientIP : getClientIP(state)
   }
 }
 

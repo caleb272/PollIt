@@ -37,7 +37,11 @@ export function getUsersPolls(state, userId) {
 
 
 export function getUser(state) {
-  return state.user
+  return state.user.userProfile
+}
+
+export function getClientIP(state) {
+  return state.user.clientIP
 }
 
 export default PollReducer

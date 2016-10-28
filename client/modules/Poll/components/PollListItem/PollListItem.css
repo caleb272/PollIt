@@ -1,4 +1,17 @@
-.page-padding {
+.poll-list-item .page-padding {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.poll-list-item a {
+  text-decoration: none;
+}
+
+.poll-list-item a:link {
+  color: gray;
+}
+
+
+.poll-list-item a:visited {
+  color: orange;
 }

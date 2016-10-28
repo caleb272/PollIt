@@ -11,7 +11,7 @@ export function Header(props) {
   function loggedIn() {
     return (
       <LoggedInDropdownButton
-        userID={props.user.github_id}
+        userID={props.user.userProfile.github_id}
       />
     )
   }
@@ -20,7 +20,7 @@ export function Header(props) {
       title="Poll IT"
       onTitleTouchTap={() => browserHistory.push('/')}
       showMenuIconButton={false}
-      iconElementRight={props.user ? loggedIn() : <LoginButton />}
+      iconElementRight={props.user.userProfile ? loggedIn() : <LoginButton />}
     />
   )
 }

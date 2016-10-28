@@ -29,10 +29,16 @@ function EditablePollListItem(props) {
     </CardActions>
   )
 
+  const shareButtons = (
+    <CardActions>
+      <ShareButtons poll={props.poll} />
+    </CardActions>
+  )
+
   return (
     <PollListItem
       poll={props.poll}
-      innerElements={props.showModifyButtons ? actions : null}
+      innerElements={props.showModifyButtons ? actions : shareButtons}
     />
   )
 }
