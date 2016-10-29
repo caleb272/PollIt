@@ -71,7 +71,7 @@ export function voteOnPoll(req, res) {
   Poll.findOne(query)
     .then((poll) => {
       console.log('your poll:', poll)
-      votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
+      // votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
       poll.markModified('entries')
       console.log('after modifications:', poll)
       return poll.save()
