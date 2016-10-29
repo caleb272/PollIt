@@ -1,3 +1,6 @@
+// "start": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=development nodemon index.js",
+// "start": "NODE_ENV=production MONGO_URL=mongodb://caleb-db:123Dog@ds023560.mlab.com:23560/fcc-project-database node index.js",
+
 import Express from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser'
@@ -31,7 +34,6 @@ import Helmet from 'react-helmet';
 // Import required modules
 import routes from '../client/routes'
 import { fetchComponentData } from './util/fetchData'
-import dummyData from './dummyData'
 import serverConfig from './config'
 
 import auth from './routes/api/auth/auth'
