@@ -2,4 +2,4 @@
 <div>
   start the server with "npm run start"
 </div>
-[https://voting-app--fcc.herokuapp.com/](View Poll It){:target="_blank"}
+[View Poll It](https://voting-app--fcc.herokuapp.com/)
