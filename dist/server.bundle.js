@@ -2986,12 +2986,12 @@
 	}
 
 	function voteOnPoll(req, res) {
-	  console.log('voteOnPoll:', req.body);
 	  var voterID = (req.user ? req.user.github_id : null) || req.connection.remoteAddress;
 	  var entryTitle = req.body.entryTitle;
 	  var query = { cuid: req.body.cuid };
 
 	  _poll2.default.findOne(query).then(function (poll) {
+	    console.log('your poll:', poll);
 	    _voting_tools2.default.voteOnPollEntries(voterID, entryTitle, poll.entries);
 	    poll.markModified('entries');
 	    return poll.save().then(function (votedOnPoll) {

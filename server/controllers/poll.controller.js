@@ -62,7 +62,6 @@ export function updatePoll(req, res) {
 
 
 export function voteOnPoll(req, res) {
-  console.log('voteOnPoll:', req.body)
   const voterID = (req.user ? req.user.github_id : null) ||
       req.connection.remoteAddress
   const entryTitle = req.body.entryTitle
@@ -71,6 +70,7 @@ export function voteOnPoll(req, res) {
 
   Poll.findOne(query)
     .then((poll) => {
+      console.log('your poll:', poll)
       votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
       poll.markModified('entries')
       return poll.save()
