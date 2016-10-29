@@ -36,7 +36,6 @@ class VoteableBarChart extends Component {
           you could update the users end with the response from the server
           but its not realy necessary
         */
-
         // sortPollEntries(this.props.poll)
         // updateVotedOnBars()
       })

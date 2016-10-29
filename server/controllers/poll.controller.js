@@ -62,6 +62,9 @@ export function updatePoll(req, res) {
 
 
 export function voteOnPoll(req, res) {
+  console.log('voteOnPoll:', req.body)
+  send(null, null)
+  return
   const voterID = (req.user ? req.user.github_id : null) ||
       req.connection.remoteAddress
   const entryTitle = req.body.entryTitle

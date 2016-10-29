@@ -2521,7 +2521,6 @@
 	          you could update the users end with the response from the server
 	          but its not realy necessary
 	        */
-
 	        // sortPollEntries(this.props.poll)
 	        // updateVotedOnBars()
 	      });
@@ -2987,6 +2986,9 @@
 	}
 
 	function voteOnPoll(req, res) {
+	  console.log('voteOnPoll:', req.body);
+	  send(null, null);
+	  return;
 	  var voterID = (req.user ? req.user.github_id : null) || req.connection.remoteAddress;
 	  var entryTitle = req.body.entryTitle;
 	  var query = { cuid: req.body.cuid };
