@@ -5,7 +5,7 @@ import BarChart from './BarChart'
 import { getUser, getClientIP } from '../../PollReducer'
 import { voteOnPollRequest } from '../../PollActions'
 
-import votingTools, { sortPollEntries } from '../../../../../server/tools/voting_tools'
+import votingTools, { sortPollEntries } from '../../../../../server/util/voting_tools'
 
 class VoteableBarChart extends Component {
   constructor(props) {

@@ -2992,7 +2992,7 @@
 
 	  _poll2.default.findOne(query).then(function (poll) {
 	    console.log('your poll:', poll);
-	    // votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
+	    _voting_tools2.default.voteOnPollEntries(voterID, entryTitle, poll.entries);
 	    poll.markModified('entries');
 	    console.log('after modifications:', poll);
 	    return poll.save().then(function (votedOnPoll) {
