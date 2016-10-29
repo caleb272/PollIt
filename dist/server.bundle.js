@@ -2994,6 +2994,7 @@
 	    console.log('your poll:', poll);
 	    _voting_tools2.default.voteOnPollEntries(voterID, entryTitle, poll.entries);
 	    poll.markModified('entries');
+	    console.log('after modifications:', poll);
 	    return poll.save().then(function (votedOnPoll) {
 	      return send(votedOnPoll, 'voted on poll');
 	    });

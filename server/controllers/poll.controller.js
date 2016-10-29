@@ -1,5 +1,5 @@
 import Poll from '../models/poll'
-import votingTools from '../../tools/voting_tools'
+import votingTools from '../tools/voting_tools'
 import { slug } from 'cuid'
 
 export function createPoll(req, res) {
@@ -73,6 +73,7 @@ export function voteOnPoll(req, res) {
       console.log('your poll:', poll)
       votingTools.voteOnPollEntries(voterID, entryTitle, poll.entries)
       poll.markModified('entries')
+      console.log('after modifications:', poll)
       return poll.save()
         .then(votedOnPoll => send(votedOnPoll, 'voted on poll'))
     })

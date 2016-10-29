@@ -1,5 +1,5 @@
 import { CREATE_POLL, UPDATE_POLL, DELETE_POLL } from './PollActions'
-import { sortPollEntries } from '../../../tools/voting_tools'
+import { sortPollEntries } from '../../../server/tools/voting_tools'
 
 const initialState = []
 

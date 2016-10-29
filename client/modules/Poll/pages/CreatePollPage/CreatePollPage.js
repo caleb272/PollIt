@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { TextField, SelectField, MenuItem, RaisedButton, Dialog } from 'material-ui'
 
-import { sortPollEntries, sortOptions } from '../../../../../tools/voting_tools.js'
+import { sortPollEntries, sortOptions } from '../../../../../server/tools/voting_tools.js'
 
 import BarChart from '../../components/BarChart/BarChart'
 import IncompletePollDialog from '../../components/IncompletePollDialog/IncompletePollDialog'
