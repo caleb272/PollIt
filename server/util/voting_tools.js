@@ -17,7 +17,9 @@ export default (function votingTools() {
   function getVotedOnEntryByVoter(voterID, entries) {
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i]
-      if (entry.votes.includes(voterID)) {
+      // commented out because Array.includes is not supported on heroku so i have to get it by index
+      // if (entry.votes.includes(voterID)) {
+      if (entry.votes.indexOf(voterID) !== -1) {
         return entry
       }
     }
