@@ -6,4 +6,3 @@ dump.rdb
 .vscode/
 coverage/
 .nyc_output/
-server/util/privateEnvVariables.js
